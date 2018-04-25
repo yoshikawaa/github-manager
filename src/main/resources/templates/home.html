@@ -1,0 +1,24 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<title>Home</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
+</head>
+<body>
+    <div class="siimple-content--fluid">
+        <div class="siimple-breadcrumb">
+            <a class="siimple-breadcrumb-crumb" href="#">Home</a>
+        </div>
+
+        <div class="siimple-h1">
+            Welcome <span sec:authentication="name"></span>
+        </div>
+        <div class="siimple-h2">
+            This is Simple Github Manager Application.
+        </div>
+        <div class="siimple-h3">
+            <a class="siimple-link" th:href="@{/orgs}">Let's manage your repositories!</a>
+        </div>
+    </div>
+</body>
+</html>

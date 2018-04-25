@@ -1,0 +1,90 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<title>Milestones</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+</head>
+<body>
+    <div class="siimple-content--fluid">
+        <div class="siimple-breadcrumb">
+            <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
+            <a class="siimple-breadcrumb-crumb" th:href="@{/orgs}">Orgs</a>
+            <a class="siimple-breadcrumb-crumb" th:href="@{/repos/{owner}(owner=${owner})}">Repos</a>
+            <a class="siimple-breadcrumb-crumb" href="#">Milestones</a>
+        </div>
+
+        <div class="siimple-h1">
+            Milestones of <span th:text="|${owner}/${repo}|"></span>
+        </div>
+
+        <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
+            <div class="siimple-table-header">
+                <div class="siimple-table-row">
+                    <div class="siimple-table-cell">Title</div>
+                    <div class="siimple-table-cell">Description</div>
+                    <div class="siimple-table-cell">Due On</div>
+                    <div class="siimple-table-cell">State</div>
+                    <div class="siimple-table-cell">Open / Closed</div>
+                    <div class="siimple-table-cell">Action</div>
+                </div>
+            </div>
+            <div class="siimple-table-body">
+                <form class="siimple-table-row" method="post" th:action>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid" name="title" placeholder="title">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid" name="description" placeholder="description">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid datetimepicker" name="dueOn"
+                            placeholder="dueOn">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid" name="state" value="open" placeholder="state"
+                            readonly>
+                    </div>
+                    <div class="siimple-table-cell"></div>
+                    <div class="siimple-table-cell">
+                        <button class="siimple-btn siimple-btn--blue">Create</button>
+                    </div>
+                </form>
+                <form class="siimple-table-row" method="post" th:action="@{milestones/{number}(number=*{number})}"
+                    th:each="milestone : ${milestones}" th:object="${milestone}">
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid" name="title" th:value="*{title}"
+                            placeholder="title">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid" name="description" th:value="*{description}"
+                            placeholder="description">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid datetimepicker" name="dueOn"
+                            th:value="*{#temporals.format(dueOn, 'yyyy/MM/dd HH:mm')}" placeholder="dueOn">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <select class="siimple-select siimple-select--fluid" name="state">
+                            <option th:each="state : ${@states}" th:text="${state}" th:selected="${state} == *{state}"></option>
+                        </select>
+                    </div>
+                    <div class="siimple-table-cell" th:text="|*{openIssues} / *{closedIssues}|"></div>
+                    <div class="siimple-table-cell">
+                        <button class="siimple-btn siimple-btn--green" name="update">Update</button>
+                        <button class="siimple-btn siimple-btn--pink" name="delete">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+					$(function() {
+						$(".datetimepicker").datetimepicker();
+					});
+				</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{"properties": [{
+  "name": "proxy.host",
+  "type": "java.lang.String",
+  "description": "proxy host"
+},{
+  "name": "proxy.port",
+  "type": "java.lang.Integer",
+  "description": "proxy port"
+},{
+  "name": "proxy.user",
+  "type": "java.lang.String",
+  "description": "proxy auth user"
+},{
+  "name": "proxy.password",
+  "type": "java.lang.String",
+  "description": "proxy auth password"
+},{
+  "name": "app.url.github",
+  "type": "java.lang.String",
+  "description": "url github html"
+},{
+  "name": "app.url.github-api",
+  "type": "java.lang.String",
+  "description": "url github api"
+}]}
