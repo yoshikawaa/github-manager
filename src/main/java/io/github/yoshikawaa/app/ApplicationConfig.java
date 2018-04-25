@@ -9,7 +9,8 @@ import org.springframework.web.context.annotation.ApplicationScope;
 import com.google.common.collect.ImmutableList;
 
 @Configuration
-public class GithubConfig {
+public class ApplicationConfig {
+
     @ApplicationScope
     @Bean("states")
     public List<String> state() {

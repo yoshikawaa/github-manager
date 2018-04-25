@@ -2,6 +2,7 @@ package io.github.yoshikawaa.app;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -47,27 +47,29 @@ public class Application {
     @Bean
     public ClientHttpRequestInterceptor requestInterceptor() {
         return (request, body, execution) -> {
-            log.debug("Req For -> {}:{}", request.getMethod().name(), request.getURI().toString());
+            log.info("Req For -> {}:{}", request.getMethod().name(), request.getURI().toString());
             if (body != null && body.length > 0) {
-                log.debug("Req Body -> {}", new String(body));
+                log.info("Req Body -> {}", new String(body));
             }
             return execution.execute(request, body);
         };
     }
 
     @Bean
-    @ConditionalOnProperty("proxy.host")
-    public ClientHttpRequestFactory requestFactory(@Value("${proxy.host}") String host,
-            @Value("${proxy.port}") int port, @Value("${proxy.user:}") String user,
+    public ClientHttpRequestFactory requestFactory(@Value("${proxy.host:}") String host,
+            @Value("${proxy.port:}") Integer port, @Value("${proxy.user:}") String user,
             @Value("${proxy.password:}") String password) {
 
         HttpClientBuilder builder = HttpClientBuilder.create();
-        builder.setProxy(new HttpHost(host, port));
 
-        if (StringUtils.hasText(user) && StringUtils.hasText(password)) {
-            BasicCredentialsProvider provider = new BasicCredentialsProvider();
-            provider.setCredentials(new AuthScope(host, port), new UsernamePasswordCredentials(user, password));
-            builder.setDefaultCredentialsProvider(provider);
+        if (StringUtils.hasText(host) && Objects.nonNull(port)) {
+            builder.setProxy(new HttpHost(host, port));
+            
+            if (StringUtils.hasText(user) && StringUtils.hasText(password)) {
+                BasicCredentialsProvider provider = new BasicCredentialsProvider();
+                provider.setCredentials(new AuthScope(host, port), new UsernamePasswordCredentials(user, password));
+                builder.setDefaultCredentialsProvider(provider);
+            }
         }
 
         return new HttpComponentsClientHttpRequestFactory(builder.build());
