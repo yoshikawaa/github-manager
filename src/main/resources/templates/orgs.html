@@ -32,6 +32,10 @@
                     <div class="siimple-table-cell">
                         <a class="siimple-btn siimple-btn--blue"
                             th:href="@{/repos/{owner}(owner=${#authentication.name})}">Repos</a>
+                        <a class="siimple-btn siimple-btn--blue"
+                            th:href="@{/orgs/{owner}/labels(owner=${#authentication.name})}">Labels</a>
+                        <a class="siimple-btn siimple-btn--blue"
+                            th:href="@{/orgs/{owner}/milestones(owner=${#authentication.name})}">Milestones</a>
                     </div>
                 </div>
                 <div class="siimple-table-row" th:each="org : ${orgs}" th:object="${org}">
@@ -41,6 +45,8 @@
                     </div>
                     <div class="siimple-table-cell">
                         <a class="siimple-btn siimple-btn--blue" th:href="@{/repos/{owner}(owner=*{login})}">Repos</a>
+                        <a class="siimple-btn siimple-btn--blue" th:href="@{/orgs/{owner}/labels(owner=*{login})}">Labels</a>
+                        <a class="siimple-btn siimple-btn--blue" th:href="@{/orgs/{owner}/milestones(owner=*{login})}">Milestones</a>
                     </div>
                 </div>
             </div>

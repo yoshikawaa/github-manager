@@ -21,7 +21,7 @@ public class OrgsController extends AbstractRestClientController {
                 .queryParam("per_page", 100)
                 .build()
                 .toUri();
-        model.addAttribute("orgs", auth2RestTemplate.getForEntity(uri, Organization[].class).getBody());
+        model.addAttribute("orgs", restOperations.getForEntity(uri, Organization[].class).getBody());
         return "orgs";
     }
 

@@ -1,7 +1,7 @@
 server:
   port: 9999
   servlet:
-    context-path: /cathub
+    context-path: /github-manager
 spring:
   thymeleaf:
     cache: false

@@ -7,7 +7,7 @@ import org.springframework.web.client.RestOperations;
 public class AbstractRestClientController {
 
     @Autowired
-    protected RestOperations auth2RestTemplate;
+    protected RestOperations restOperations;
 
     @Value("${app.url.github-api}")
     protected String baseUrl;

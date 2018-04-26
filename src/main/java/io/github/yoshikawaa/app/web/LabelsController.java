@@ -22,7 +22,7 @@ public class LabelsController extends AbstractRestClientController {
                 .path("/repos/{owner}/{repo}/labels")
                 .queryParam("per_page", 100)
                 .build(owner, repo);
-        model.addAttribute("labels", auth2RestTemplate.getForEntity(uri, Label[].class).getBody());
+        model.addAttribute("labels", restOperations.getForEntity(uri, Label[].class).getBody());
         model.addAttribute("owner", owner);
         model.addAttribute("repo", repo);
         return "labels";
@@ -34,7 +34,7 @@ public class LabelsController extends AbstractRestClientController {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels")
                 .build(owner, repo);
-        auth2RestTemplate.postForEntity(uri, label, Label.class);
+        restOperations.postForEntity(uri, label, Label.class);
         return "redirect:/repos/{owner}/{repo}/labels";
     }
 
@@ -44,7 +44,7 @@ public class LabelsController extends AbstractRestClientController {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels/{name}")
                 .build(owner, repo, name);
-        auth2RestTemplate.patchForObject(uri, label, Label.class);
+        restOperations.patchForObject(uri, label, Label.class);
         return "redirect:/repos/{owner}/{repo}/labels";
     }
 
@@ -54,7 +54,7 @@ public class LabelsController extends AbstractRestClientController {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels/{name}")
                 .build(owner, repo, name);
-        auth2RestTemplate.delete(uri);
+        restOperations.delete(uri);
         return "redirect:/repos/{owner}/{repo}/labels";
     }
 

@@ -24,7 +24,7 @@ public class MilestonesController extends AbstractRestClientController {
                 .queryParam("direction", "desc")
                 .queryParam("per_page", 100)
                 .build(owner, repo);
-        model.addAttribute("milestones", auth2RestTemplate.getForEntity(uri, Milestone[].class).getBody());
+        model.addAttribute("milestones", restOperations.getForEntity(uri, Milestone[].class).getBody());
         model.addAttribute("owner", owner);
         model.addAttribute("repo", repo);
         return "milestones";
@@ -36,7 +36,7 @@ public class MilestonesController extends AbstractRestClientController {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones")
                 .build(owner, repo);
-        auth2RestTemplate.postForEntity(uri, milestone, Milestone.class);
+        restOperations.postForEntity(uri, milestone, Milestone.class);
         return "redirect:/repos/{owner}/{repo}/milestones";
     }
     
@@ -46,7 +46,7 @@ public class MilestonesController extends AbstractRestClientController {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones/{number}")
                 .build(owner, repo, number);
-        auth2RestTemplate.patchForObject(uri, milestone, Milestone.class);
+        restOperations.patchForObject(uri, milestone, Milestone.class);
         return "redirect:/repos/{owner}/{repo}/milestones";
     }
 
@@ -56,7 +56,7 @@ public class MilestonesController extends AbstractRestClientController {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones/{number}")
                 .build(owner, repo, number);
-        auth2RestTemplate.delete(uri);
+        restOperations.delete(uri);
         return "redirect:/repos/{owner}/{repo}/milestones";
     }
 

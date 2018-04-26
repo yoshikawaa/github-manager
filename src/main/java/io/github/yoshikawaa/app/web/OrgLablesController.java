@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.github.yoshikawaa.app.entity.Label;
@@ -20,59 +21,57 @@ import io.github.yoshikawaa.app.entity.Repository;
 @RequestMapping("/orgs/{owner}/labels")
 public class OrgLablesController extends AbstractRestClientController {
 
-    private Repository[] repositories(String owner, Authentication authentication) {
-        URI uri = UriComponentsBuilder.fromUriString(baseUrl)
+    @GetMapping
+    public String labels(Model model, @PathVariable("owner") String owner, Authentication authentication) {
+        URI reposUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path(owner.equals(authentication.getName()) ? "/users/{org}/repos" : "/orgs/{org}/repos")
                 .queryParam("per_page", 100)
                 .build(owner);
-        return auth2RestTemplate.getForEntity(uri, Repository[].class).getBody();
-    }
-
-    @GetMapping
-    public String labels(Model model, @PathVariable("owner") String owner, Authentication authentication) {
-        model.addAttribute("labelsMap", Arrays.stream(repositories(owner, authentication))
-                .collect(Collectors.toMap(Repository::getName, repo -> {
-                    URI uri = UriComponentsBuilder.fromUriString(baseUrl)
-                            .path("/repos/{owner}/{repo}/labels")
-                            .queryParam("per_page", 100)
-                            .build(owner, repo.getName());
-                    return auth2RestTemplate.getForEntity(uri, Label[].class).getBody();
-                })));
+        model.addAttribute("labelsMap",
+                Arrays.stream(restOperations.getForEntity(reposUri, Repository[].class).getBody())
+                        .collect(Collectors.toMap(Repository::getName, repo -> {
+                            URI uri = UriComponentsBuilder.fromUriString(baseUrl)
+                                    .path("/repos/{owner}/{repo}/labels")
+                                    .queryParam("per_page", 100)
+                                    .build(owner, repo.getName());
+                            return restOperations.getForEntity(uri, Label[].class).getBody();
+                        })));
         model.addAttribute("owner", owner);
         return "orgLabels";
     }
 
     @PostMapping
-    public String labelsCreate(@PathVariable("owner") String owner, Authentication authentication, Label label) {
-        Arrays.stream(repositories(owner, authentication)).forEach(repo -> {
+    public String labelsCreate(@PathVariable("owner") String owner, @RequestParam("repos") String[] repos,
+            Label label) {
+        Arrays.stream(repos).forEach(repo -> {
             URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                     .path("/repos/{owner}/{repo}/labels")
-                    .build(owner, repo.getName());
-            auth2RestTemplate.postForEntity(uri, label, Label.class);
+                    .build(owner, repo);
+            restOperations.postForEntity(uri, label, Label.class);
         });
         return "redirect:/orgs/{owner}/labels";
     }
 
     @PostMapping(path = "/{name}", params = "update")
-    public String labelsUpdate(@PathVariable("owner") String owner, Authentication authentication,
+    public String labelsUpdate(@PathVariable("owner") String owner, @RequestParam("repos") String[] repos,
             @PathVariable("name") String name, Label label) {
-        Arrays.stream(repositories(owner, authentication)).forEach(repo -> {
+        Arrays.stream(repos).forEach(repo -> {
             URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                     .path("/repos/{owner}/{repo}/labels/{name}")
-                    .build(owner, repo.getName(), name);
-            auth2RestTemplate.patchForObject(uri, label, Label.class);
+                    .build(owner, repo, name);
+            restOperations.patchForObject(uri, label, Label.class);
         });
         return "redirect:/orgs/{owner}/labels";
     }
 
     @PostMapping(path = "/{name}", params = "delete")
-    public String labelsDelete(@PathVariable("owner") String owner, Authentication authentication,
+    public String labelsDelete(@PathVariable("owner") String owner, @RequestParam("repos") String[] repos,
             @PathVariable("name") String name) {
-        Arrays.stream(repositories(owner, authentication)).forEach(repo -> {
+        Arrays.stream(repos).forEach(repo -> {
             URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                     .path("/repos/{owner}/{repo}/labels/{name}")
-                    .build(owner, repo.getName(), name);
-            auth2RestTemplate.delete(uri);
+                    .build(owner, repo, name);
+            restOperations.delete(uri);
         });
         return "redirect:/orgs/{owner}/labels";
     }

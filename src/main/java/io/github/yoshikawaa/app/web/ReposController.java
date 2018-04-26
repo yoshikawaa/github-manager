@@ -22,7 +22,7 @@ public class ReposController extends AbstractRestClientController {
                 .path(owner.equals(authentication.getName()) ? "/users/{org}/repos" : "/orgs/{org}/repos")
                 .queryParam("per_page", 100)
                 .build(owner);
-        model.addAttribute("repos", auth2RestTemplate.getForEntity(uri, Repository[].class).getBody());
+        model.addAttribute("repos", restOperations.getForEntity(uri, Repository[].class).getBody());
         model.addAttribute("owner", owner);
         return "repos";
     }

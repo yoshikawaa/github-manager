@@ -1,54 +1,61 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<title>Labels</title>
+<title>Milestones</title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 </head>
 <body>
     <form class="siimple-content--fluid" method="post" th:action>
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
             <a class="siimple-breadcrumb-crumb" th:href="@{/orgs}">Orgs</a>
-            <a class="siimple-breadcrumb-crumb" href="#">Labels</a>
+            <a class="siimple-breadcrumb-crumb" href="#">Milestones</a>
         </div>
 
         <div class="siimple-h1">
-            Manage Labels of <span th:text="|${owner}|"></span>
+            Manage Milestones of <span th:text="|${owner}|"></span>
         </div>
 
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
-                    <div class="siimple-table-cell">Name</div>
+                    <div class="siimple-table-cell">Title</div>
                     <div class="siimple-table-cell">Description</div>
-                    <div class="siimple-table-cell">Color</div>
+                    <div class="siimple-table-cell">Due On</div>
+                    <div class="siimple-table-cell">State</div>
                     <div class="siimple-table-cell">Action</div>
                 </div>
             </div>
             <div class="siimple-table-body">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid" name="name" placeholder="name">
+                        <input class="siimple-input siimple-input--fluid" name="title" placeholder="title">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid" name="description" placeholder="description">
                     </div>
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid jscolor" name="color" placeholder="color">
+                        <input class="siimple-input siimple-input--fluid datetimepicker" name="dueOn"
+                            placeholder="dueOn">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid" name="state" value="open" placeholder="state"
+                            readonly>
                     </div>
                     <div class="siimple-table-cell">
                         <button class="siimple-btn siimple-btn--blue">Create</button>
-                        <button class="siimple-btn siimple-btn--green" name="update">Update</button>
-                        <button class="siimple-btn siimple-btn--pink" name="delete">Delete</button>
                     </div>
                 </div>
             </div>
         </div>
 
+
         <div class="siimple-h1">
-            Labels of <span th:text="|${owner}|"></span>
+            Milestones of <span th:text="|${owner}|"></span>
         </div>
 
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
@@ -56,11 +63,11 @@
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">Repository</div>
                     <div class="siimple-table-cell">Target</div>
-                    <div class="siimple-table-cell">Labels</div>
+                    <div class="siimple-table-cell">Milestones</div>
                 </div>
             </div>
             <div class="siimple-table-body">
-                <div class="siimple-table-row" th:each="labels : ${labelsMap}" th:object="${labels}">
+                <div class="siimple-table-row" th:each="milestones : ${milestonesMap}" th:object="${milestones}">
                     <div class="siimple-table-cell" th:text="*{key}"></div>
                     <div class="siimple-table-cell">
                         <div class="siimple-checkbox">
@@ -69,35 +76,16 @@
                         </div>
                     </div>
                     <div class="siimple-table-cell">
-                        <th:block th:each="label : *{value}" th:object="${label}">
-                            <button type="button" class="siimple-btn copyable" th:style="|background-color: #*{color}|"
-                                th:id="${#ids.seq('copyable')}" th:text="*{name}"></button>
-                            <input type="hidden" th:id="|description-${#ids.prev('copyable')}|"
-                                th:value="*{description}">
-                            <input type="hidden" th:id="|color-${#ids.prev('copyable')}|" th:value="*{color}">
-                        </th:block>
+                        <span class="siimple-tag siimple-tag--grey" th:each="milestone : *{value}"
+                            th:text="${milestone.title}"></span>
                     </div>
                 </div>
             </div>
         </div>
     </form>
     <script>
-        $(".copyable").on("click", function() {
-            const key = $(this).text();
-            const id = $(this).attr("id");
-    
-            const name = $("input[name='name']");
-            const description = $("input[name='description']");
-            const color = $("input[name='color']");
-    
-            name.val(key);
-            description.val($("#description-" + id).val());
-            color.val($("#color-" + id).val());
-    
-            color[0].jscolor.fromString(color.val());
-    
-            $("button:contains('Update')").attr("formaction", "labels/" + key);
-            $("button:contains('Delete')").attr("formaction", "labels/" + key);
+        $(function() {
+            $(".datetimepicker").datetimepicker();
         });
     </script>
 </body>
