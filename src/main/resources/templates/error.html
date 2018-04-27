@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<title>Error</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
+</head>
+<body>
+    <div class="siimple-content--fluid">
+        <div class="siimple-breadcrumb">
+            <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
+            <a class="siimple-breadcrumb-crumb" href="#">Error</a>
+        </div>
+
+        <div class="siimple-h1" th:text="|Error ${status} ${error}|"></div>
+        <div class="siimple-h2" th:text="${message}"></div>
+        <div class="siimple-h3">If you want to continue operation, please browser back!</div>
+    </div>
+</body>
+</html>

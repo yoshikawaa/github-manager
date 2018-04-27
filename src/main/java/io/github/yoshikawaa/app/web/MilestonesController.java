@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,7 @@ public class MilestonesController extends AbstractRestClientController {
 
     @PostMapping
     public String milestonesCreate(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
-            Milestone milestone) {
+            @Validated Milestone milestone) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones")
                 .build(owner, repo);
@@ -42,7 +43,7 @@ public class MilestonesController extends AbstractRestClientController {
     
     @PostMapping(path = "/{number}", params = "update")
     public String milestonesUpdate(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
-            @PathVariable("number") int number, Milestone milestone) {
+            @PathVariable("number") int number, @Validated Milestone milestone) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones/{number}")
                 .build(owner, repo, number);

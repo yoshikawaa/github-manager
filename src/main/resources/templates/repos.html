@@ -28,7 +28,7 @@
             <div class="siimple-table-body">
                 <div class="siimple-table-row" th:each="repo : ${repos}" th:object="${repo}">
                     <div class="siimple-table-cell">
-                        <a class="siimple-link" th:href="*{htmlUrl}" th:text="*{name}"></a>
+                        <a class="siimple-link" target="_blank" th:href="*{htmlUrl}" th:text="*{name}"></a>
                     </div>
                     <div class="siimple-table-cell"
                         th:text="*{(not #strings.isEmpty(description)) and (#strings.length(description) gt 100) ?

@@ -25,7 +25,7 @@
             <div class="siimple-table-body">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">
-                        <a class="siimple-link"
+                        <a class="siimple-link" target="_blank"
                             th:href="|${@environment.getProperty('app.url.github')}/${#authentication.name}"
                             sec:authentication="name"></a>
                     </div>
@@ -40,8 +40,8 @@
                 </div>
                 <div class="siimple-table-row" th:each="org : ${orgs}" th:object="${org}">
                     <div class="siimple-table-cell">
-                        <a class="siimple-link" th:href="|${@environment.getProperty('app.url.github')}/*{login}"
-                            th:text="*{login}"></a>
+                        <a class="siimple-link" target="_blank"
+                            th:href="|${@environment.getProperty('app.url.github')}/*{login}" th:text="*{login}"></a>
                     </div>
                     <div class="siimple-table-cell">
                         <a class="siimple-btn siimple-btn--blue" th:href="@{/repos/{owner}(owner=*{login})}">Repos</a>

@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ public class LabelsController extends AbstractRestClientController {
 
     @PostMapping
     public String labelsCreate(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
-            Label label) {
+            @Validated Label label) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels")
                 .build(owner, repo);
@@ -40,7 +41,7 @@ public class LabelsController extends AbstractRestClientController {
 
     @PostMapping(path = "/{name}", params = "update")
     public String labelsUpdate(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
-            @PathVariable("name") String name, Label label) {
+            @PathVariable("name") String name, @Validated Label label) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels/{name}")
                 .build(owner, repo, name);

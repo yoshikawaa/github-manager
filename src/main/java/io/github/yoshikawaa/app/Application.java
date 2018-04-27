@@ -46,6 +46,7 @@ public class Application {
     
     @Bean
     public ClientHttpRequestInterceptor requestInterceptor() {
+
         return (request, body, execution) -> {
             log.info("Req For -> {}:{}", request.getMethod().name(), request.getURI().toString());
             if (body != null && body.length > 0) {
