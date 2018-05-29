@@ -25,3 +25,11 @@ app:
   url:
     github: http://github.com
     github-api: https://api.github.com
+  pagination:
+    per-page: 100
+  analysis:
+    comment:
+      categories:
+        "[good]" : good
+        "[bad]" : bad
+      category-default: other

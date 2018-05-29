@@ -13,8 +13,20 @@ public class ApplicationConfig {
 
     @ApplicationScope
     @Bean("states")
-    public List<String> state() {
+    public List<String> states() {
         return ImmutableList.of("open", "closed");
     }
-
+    
+    @ApplicationScope
+    @Bean("sorts")
+    public List<String> sorts() {
+        return ImmutableList.of("", "comments", "created", "updated");
+    }
+    
+    @ApplicationScope
+    @Bean("orders")
+    public List<String> orders() {
+        return ImmutableList.of("", "asc", "desc");
+    }
+    
 }

@@ -11,4 +11,7 @@ public class AbstractRestClientController {
 
     @Value("${app.url.github-api}")
     protected String baseUrl;
+
+    @Value("${app.pagination.per-page:30}")
+    protected String perPage;
 }

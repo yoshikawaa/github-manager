@@ -20,7 +20,7 @@ public class ReposController extends AbstractRestClientController {
     public String repos(Model model, @PathVariable("owner") String owner, Authentication authentication) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path(owner.equals(authentication.getName()) ? "/users/{org}/repos" : "/orgs/{org}/repos")
-                .queryParam("per_page", 100)
+                .queryParam("per_page", perPage)
                 .build(owner);
         model.addAttribute("repos", restOperations.getForEntity(uri, Repository[].class).getBody());
         model.addAttribute("owner", owner);

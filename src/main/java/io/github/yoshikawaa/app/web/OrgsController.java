@@ -18,7 +18,7 @@ public class OrgsController extends AbstractRestClientController {
     public String orgs(Model model) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/user/orgs")
-                .queryParam("per_page", 100)
+                .queryParam("per_page", perPage)
                 .build()
                 .toUri();
         model.addAttribute("orgs", restOperations.getForEntity(uri, Organization[].class).getBody());

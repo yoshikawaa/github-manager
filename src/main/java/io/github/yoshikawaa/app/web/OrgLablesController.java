@@ -34,14 +34,14 @@ public class OrgLablesController extends AbstractRestClientController {
     public String labels(Model model, @PathVariable("owner") String owner, Authentication authentication) {
         URI reposUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path(owner.equals(authentication.getName()) ? "/users/{org}/repos" : "/orgs/{org}/repos")
-                .queryParam("per_page", 100)
+                .queryParam("per_page", perPage)
                 .build(owner);
         model.addAttribute("labelsMap",
                 Arrays.stream(restOperations.getForEntity(reposUri, Repository[].class).getBody())
                         .collect(Collectors.toMap(Repository::getName, repo -> {
                             URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                                     .path("/repos/{owner}/{repo}/labels")
-                                    .queryParam("per_page", 100)
+                                    .queryParam("per_page", perPage)
                                     .build(owner, repo.getName());
                             return restOperations.getForEntity(uri, Label[].class).getBody();
                         })));

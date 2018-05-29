@@ -34,7 +34,7 @@ public class OrgMilestonesController extends AbstractRestClientController {
     public String milestones(Model model, @PathVariable("owner") String owner, Authentication authentication) {
         URI reposUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path(owner.equals(authentication.getName()) ? "/users/{org}/repos" : "/orgs/{org}/repos")
-                .queryParam("per_page", 100)
+                .queryParam("per_page", perPage)
                 .build(owner);
         model.addAttribute("milestonesMap",
                 Arrays.stream(restOperations.getForEntity(reposUri, Repository[].class).getBody())
@@ -43,7 +43,7 @@ public class OrgMilestonesController extends AbstractRestClientController {
                                     .path("/repos/{owner}/{repo}/milestones")
                                     .queryParam("state", "all")
                                     .queryParam("direction", "desc")
-                                    .queryParam("per_page", 100)
+                                    .queryParam("per_page", perPage)
                                     .build(owner, repo.getName());
                             return restOperations.getForEntity(uri, Milestone[].class).getBody();
                         })));

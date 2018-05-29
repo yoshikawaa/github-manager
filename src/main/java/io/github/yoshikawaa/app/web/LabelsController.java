@@ -21,7 +21,7 @@ public class LabelsController extends AbstractRestClientController {
     public String labels(Model model, @PathVariable("owner") String owner, @PathVariable("repo") String repo) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels")
-                .queryParam("per_page", 100)
+                .queryParam("per_page", perPage)
                 .build(owner, repo);
         model.addAttribute("labels", restOperations.getForEntity(uri, Label[].class).getBody());
         model.addAttribute("owner", owner);

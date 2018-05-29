@@ -23,7 +23,7 @@ public class MilestonesController extends AbstractRestClientController {
                 .path("/repos/{owner}/{repo}/milestones")
                 .queryParam("state", "all")
                 .queryParam("direction", "desc")
-                .queryParam("per_page", 100)
+                .queryParam("per_page", perPage)
                 .build(owner, repo);
         model.addAttribute("milestones", restOperations.getForEntity(uri, Milestone[].class).getBody());
         model.addAttribute("owner", owner);

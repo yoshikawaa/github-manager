@@ -1,0 +1,84 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<title>Pull</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<style type="text/css">
+img.avatar {
+	width: 20px;
+	height: 20px;
+}
+</style>
+</head>
+<body>
+    <div class="siimple-content--fluid">
+        <div class="siimple-breadcrumb">
+            <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
+            <a class="siimple-breadcrumb-crumb" th:href="@{/search/pulls}">Search</a>
+            <a class="siimple-breadcrumb-crumb" href="#">Pull</a>
+        </div>
+
+        <th:block th:object="${pull}">
+            <div class="siimple-h1" th:text="*{title}"></div>
+            <th:block th:switch="*{is()}">
+                <span th:case="closed" class="siimple-tag siimple-tag--red">Closed</span>
+                <span th:case="merged" class="siimple-tag siimple-tag--purple">Merged</span>
+                <span th:case="mergeable" class="siimple-tag siimple-tag--teal">Mergeable</span>
+                <span th:case="*" class="siimple-tag siimple-tag--green">Open</span>
+            </th:block>
+            <th:block th:switch="*{is()}">
+                <small th:case="closed" class="siimple-small"
+                    th:text="merged at *{#temporals.format(closedAt, 'yyyy/MM/dd HH:mm')}|"></small>
+                <small th:case="merged" class="siimple-small"
+                    th:text="merged at *{#temporals.format(mergedAt, 'yyyy/MM/dd HH:mm')}|"></small>
+                <small th:case="*" class="siimple-small"
+                    th:text="|created at *{#temporals.format(createdAt, 'yyyy/MM/dd HH:mm')}|"></small>
+            </th:block>
+
+            <div class="siimple-h5" th:text="*{body}"></div>
+
+            <div class="siimple-small">
+                Assignees:
+                <th:block th:each="assignee : *{assignees}" th:object="${assignee}">
+                    <img class="avatar" th:src="*{avatarUrl}"></img>
+                    <span th:text="*{login}"></span>
+                </th:block>
+            </div>
+            <div class="siimple-small">
+                Labels:
+                <span class="siimple-tag" th:each="label : *{labels}" th:object="${label}"
+                    th:style="|background-color: #*{color}|" th:text="*{name}"></span>
+            </div>
+            <div class="siimple-small">
+                Milestones:
+                <span th:object="${pull.milestone}"
+                    th:class="|siimple-tag siimple-tag--*{state == 'open' ? 'grey' : 'navy'}|" th:text="*{title}"></span>
+            </div>
+        </th:block>
+
+        <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
+            <div class="siimple-table-header">
+                <div class="siimple-table-row">
+                    <div class="siimple-table-cell" th:each="entry : ${statistics}" th:text="${entry.key}"></div>
+                </div>
+            </div>
+            <div class="siimple-table-body">
+                <div class="siimple-table-row">
+                    <div class="siimple-table-cell" th:each="entry : ${statistics}" th:text="${entry.value}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="siimple-tip siimple-tip--teal" th:each="comment : ${comments}" th:object="${comment}">
+            <small class="siimple-small">
+                <span th:text="|*{user.login} commented at|"></span>
+                <a class="siimple-link" href="*{htmlUrl}"
+                    th:text="|on *{#temporals.format(createdAt, 'yyyy/MM/dd HH:mm')}|"></a>
+            </small>
+            <br>
+            <span th:text="*{body}"></span>
+        </div>
+    </div>
+</body>
+</html>

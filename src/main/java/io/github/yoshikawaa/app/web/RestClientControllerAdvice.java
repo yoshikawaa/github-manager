@@ -10,7 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.yoshikawaa.app.entity.ErrorResponse;
+import io.github.yoshikawaa.app.entity.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice

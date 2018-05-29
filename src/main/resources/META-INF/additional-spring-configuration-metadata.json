@@ -22,4 +22,16 @@
   "name": "app.url.github-api",
   "type": "java.lang.String",
   "description": "url github api"
+},{
+  "name": "app.pagination.per-page",
+  "type": "java.lang.Integer",
+  "description": "pagination items per_page"
+},{
+  "name": "app.analysis.comment.categories",
+  "type": "java.lang.Map",
+  "description": "analysis comment categories ([keyword: category] pattern)"
+},{
+  "name": "app.analysis.comment.category-default",
+  "type": "java.lang.String",
+  "description": "analysis default category"
 }]}
