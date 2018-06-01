@@ -1,10 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>Orgs</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
+<th:block th:replace="~{partial/partials :: header}"></th:block>
 </head>
 <body>
+    <th:block th:replace="~{partial/partials :: navbar}"></th:block>
+
     <div class="siimple-content--fluid">
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
@@ -12,7 +13,8 @@
         </div>
 
         <div class="siimple-h1">
-            Organizations for <span sec:authentication="name"></span>
+            Organizations for
+            <span sec:authentication="name"></span>
         </div>
 
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
@@ -33,9 +35,11 @@
                         <a class="siimple-btn siimple-btn--blue"
                             th:href="@{/repos/{owner}(owner=${#authentication.name})}">Repos</a>
                         <a class="siimple-btn siimple-btn--blue"
-                            th:href="@{/orgs/{owner}/labels(owner=${#authentication.name})}">Labels</a>
+                            th:href="@{/orgs/{owner}/labels(owner=${#authentication.name})}"
+                            title="Caution! Very Heavy!!!">Labels</a>
                         <a class="siimple-btn siimple-btn--blue"
-                            th:href="@{/orgs/{owner}/milestones(owner=${#authentication.name})}">Milestones</a>
+                            th:href="@{/orgs/{owner}/milestones(owner=${#authentication.name})}"
+                            title="Caution! Very Heavy!!!">Milestones</a>
                     </div>
                 </div>
                 <div class="siimple-table-row" th:each="org : ${orgs}" th:object="${org}">
@@ -45,12 +49,17 @@
                     </div>
                     <div class="siimple-table-cell">
                         <a class="siimple-btn siimple-btn--blue" th:href="@{/repos/{owner}(owner=*{login})}">Repos</a>
-                        <a class="siimple-btn siimple-btn--blue" th:href="@{/orgs/{owner}/labels(owner=*{login})}">Labels</a>
-                        <a class="siimple-btn siimple-btn--blue" th:href="@{/orgs/{owner}/milestones(owner=*{login})}">Milestones</a>
+                        <a class="siimple-btn siimple-btn--blue" th:href="@{/orgs/{owner}/labels(owner=*{login})}"
+                            title="Caution! Very Heavy!!!">Labels</a>
+                        <a class="siimple-btn siimple-btn--blue" th:href="@{/orgs/{owner}/milestones(owner=*{login})}"
+                            title="Caution! Very Heavy!!!">Milestones</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+		tippy("a", { placement : "bottom" });
+	</script>
 </body>
 </html>

@@ -1,10 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>Home</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
+<th:block th:replace="~{partial/partials :: header}"></th:block>
 </head>
 <body>
+    <th:block th:replace="~{partial/partials :: navbar}"></th:block>
+
     <div class="siimple-content--fluid">
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" href="#">Home</a>
@@ -18,6 +19,13 @@
         </div>
         <div class="siimple-h3">
             <a class="siimple-link" th:href="@{/orgs}">Let's manage your repositories!</a>
+        </div>
+        <div class="siimple-h3">
+            Or you want search
+            <a class="siimple-link" th:href="@{/search/issues}">issues</a>
+            or
+            <a class="siimple-link" th:href="@{/search/pulls}">pull requests</a>
+            ?
         </div>
     </div>
 </body>

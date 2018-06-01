@@ -25,11 +25,13 @@ app:
   url:
     github: http://github.com
     github-api: https://api.github.com
+    github-docs-search: https://help.github.com/articles/searching-issues-and-pull-requests/
+    github-docs-syntax: https://help.github.com/articles/understanding-the-search-syntax/
   pagination:
     per-page: 100
   analysis:
     comment:
       categories:
-        "[good]" : good
-        "[bad]" : bad
-      category-default: other
+        - "[good]"
+        - "[bad]"
+      category-default: "[other]"

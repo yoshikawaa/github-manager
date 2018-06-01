@@ -1,23 +1,27 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:with="title=|Search ${type eq 'issues' ? 'Issues' : 'Pulls'}|">
 <head>
-<title>Pulls</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<title th:text="${title}"></title>
+<th:block th:replace="~{partial/partials :: header}"></th:block>
 </head>
 <body>
-    <div class="siimple-content--fluid">
+    <th:block th:replace="~{partial/partials :: navbar}"></th:block>
+
+    <form class="siimple-content--fluid">
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
-            <a class="siimple-breadcrumb-crumb" href="#">Pulls</a>
+            <a class="siimple-breadcrumb-crumb" href="#">Search</a>
         </div>
 
-        <div class="siimple-h1">Search Issues</div>
+        <div class="siimple-h1" th:text="${title}"></div>
 
-        <form class="siimple-form siimple-grid" th:action th:object="${searchQuery}">
+        <div class="siimple-form siimple-grid" th:object="${searchQuery}">
             <div class="siimple-grid-row">
                 <div class="siimple-grid-col siimple-grid-col--8">
-                    <label class="siimple-label">Query:</label>
+                    <label class="siimple-label">Query: <a target="_blank"
+                            th:href="${@environment.getProperty('app.url.github-docs-search')}">Qualifiers</a> <a
+                            target="_blank" th:href="${@environment.getProperty('app.url.github-docs-syntax')}">Syntax</a>
+                    </label>
                     <input type="text" class="siimple-input siimple-input--fluid" th:field="*{q}"
                         placeholder="is:open is:pr">
                 </div>
@@ -34,44 +38,97 @@
                     </select>
                 </div>
             </div>
-        </form>
+        </div>
 
-        <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
-            <div class="siimple-table-header">
-                <div class="siimple-table-row">
-                    <div class="siimple-table-cell">Repository</div>
-                    <div class="siimple-table-cell">Title</div>
-                    <div class="siimple-table-cell">Body</div>
-                    <div class="siimple-table-cell">State</div>
-                    <div class="siimple-table-cell">Action</div>
-                </div>
+        <div th:if="${page} ne null" th:object="${page}">
+            <div th:if="*{total} gt 1000" class="siimple-alert siimple-alert--pink">Sorry, Only the first 1000 search
+                results are available with Github API. Please search on more detailed terms.</div>
+
+            <div class="pageable">
+                <label class="siimple-label" th:text="|*{page} of *{pages} Pages:|"></label>
+                <input type="hidden" th:field="*{page}">
+                <th:block th:if="*{not first}">
+                    <button class="siimple-btn siimple-btn--blue" value="1">&lt;&lt;</button>
+                    <button class="siimple-btn siimple-btn--blue" th:value="*{previous}">&lt;</button>
+                </th:block>
+                <th:block th:each="around : *{arounds}" th:with="current=${around} eq *{page}">
+                    <button th:class="|siimple-btn siimple-btn--${current ? 'navy' : 'blue'}|" th:value="${around}"
+                        th:text="${around}" th:disabled="${current}"></button>
+                </th:block>
+                <th:block th:if="*{not last}">
+                    <button class="siimple-btn siimple-btn--blue" th:value="*{next}">&gt;</button>
+                    <button class="siimple-btn siimple-btn--blue" th:value="*{pages}">&gt;&gt;</button>
+                </th:block>
+                <label class="siimple-label">Per:</label> <select class="siimple-select" name="perPage">
+                    <option th:each="perPage : ${@perPages}" th:text="${perPage}"
+                        th:selected="${perPage} == ${searchQuery.perPage}"></option>
+                </select>
             </div>
-            <div class="siimple-table-body">
-                <div class="siimple-table-row" th:each="issue : ${issues}" th:object="${issue}">
-                    <div class="siimple-table-cell">
-                        <a class="siimple-link" target="_blank"
-                            th:href="|${@environment.getProperty('app.url.github')}/*{owner}/*{repo}|"
-                            th:text="|*{owner}/*{repo}|"></a>
+
+            <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
+                <div class="siimple-table-header">
+                    <div class="siimple-table-row">
+                        <div class="siimple-table-cell">Repository</div>
+                        <div class="siimple-table-cell">Title</div>
+                        <div class="siimple-table-cell">Milestone</div>
+                        <div class="siimple-table-cell">State</div>
+                        <div class="siimple-table-cell">Assignees</div>
+                        <div class="siimple-table-cell">Action</div>
                     </div>
-                    <div class="siimple-table-cell">
-                        <a class="siimple-link" target="_blank" th:href="*{htmlUrl}" th:text="|#*{number} *{title}|"></a>
-                    </div>
-                    <div class="siimple-table-cell"
-                        th:text="*{(not #strings.isEmpty(body)) and (#strings.length(body) gt 100) ?
-                                     #strings.substring(body,0,99) + '...' : body}"></div>
-                    <div class="siimple-table-cell" th:text="*{state}"></div>
-                    <div class="siimple-table-cell">
-                        <a th:if="*{pullRequest} ne null" class="siimple-btn siimple-btn--blue"
-                            th:href="@{/repos/{owner}/{repo}/pulls/{number}(owner=*{owner},repo=*{repo},number=*{number})}">Details</a>
+                </div>
+                <div class="siimple-table-body">
+                    <div class="siimple-table-row" th:each="issue : *{items}" th:object="${issue}">
+                        <div class="siimple-table-cell">
+                            <a class="siimple-link" target="_blank"
+                                th:href="|${@environment.getProperty('app.url.github')}/*{owner}/*{repo}|"
+                                th:text="|*{owner}/*{repo}|"></a>
+                        </div>
+                        <div class="siimple-table-cell">
+                            <a class="siimple-link" target="_blank" th:href="*{htmlUrl}" th:text="|#*{number} *{title}|"></a>
+                            <a class="siimple-btn" th:each="label : *{labels}" th:object="${label}"
+                                th:style="|background-color:#*{color}; color:#*{#colors.letterColor(color)}|"
+                                target="_blank" th:href="*{htmlUrl}" th:text="*{name}"></a>
+                            <span class="siimple-tag siimple-tag--grey">
+                                <i class="fas fa-comment"></i>
+                                <span th:text="*{comments}"></span>
+                            </span>
+                        </div>
+                        <div class="siimple-table-cell">
+                            <a th:if="${issue.milestone} ne null" th:object="${issue.milestone}"
+                                th:class="|siimple-btn siimple-btn--*{state eq 'open' ? 'grey' : 'navy'}|"
+                                target="_blank" th:href="*{htmlUrl}" th:text="*{title}"></a>
+                        </div>
+                        <div class="siimple-table-cell" th:text="*{state}"></div>
+                        <div class="siimple-table-cell">
+                            <a class="siimple-link" th:each="assignee : *{assignees}" th:object="${assignee}"
+                                target="_blank" th:href="*{htmlUrl}">
+                                <img class="avatar" th:src="*{avatarUrl}"></img>
+                                <span th:text="*{login}"></span>
+                            </a>
+                        </div>
+                        <div class="siimple-table-cell" th:switch="*{pullRequest} eq null">
+                            <a th:case="true" class="siimple-btn siimple-btn--blue"
+                                th:href="@{/repos/{owner}/{repo}/issues/{number}(owner=*{owner},repo=*{repo},number=*{number})}">Details</a>
+                            <a th:case="*" class="siimple-btn siimple-btn--blue"
+                                th:href="@{/repos/{owner}/{repo}/pulls/{number}(owner=*{owner},repo=*{repo},number=*{number})}">Details</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
     <script>
-        $("select").on("change", function() {
-            $(this).parents("form").submit();
-        });
-    </script>
+		$("input").on("keydown", function(e) {
+			if (e.keyCode == 13) {
+				$(this).parents("form").submit();
+			}
+		});
+		$("select").on("change", function(e) {
+			$(this).parents("form").submit();
+		});
+		$(".pageable > button").on("click", function() {
+			$("input:hidden[name='page']").val($(this).val());
+		});
+	</script>
 </body>
 </html>

@@ -1,14 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>Milestones</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
-<link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+<th:block th:replace="~{partial/partials :: header}"></th:block>
 </head>
 <body>
+    <th:block th:replace="~{partial/partials :: navbar}"></th:block>
+
     <form class="siimple-content--fluid" method="post" th:action>
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
@@ -81,7 +78,7 @@
                     <div class="siimple-table-cell">
                         <th:block th:each="milestone : *{value}" th:object="${milestone}">
                             <button type="button"
-                                th:class="|siimple-btn siimple-btn--*{state == 'open' ? 'grey' : 'navy'} copyable|"
+                                th:class="|siimple-btn siimple-btn--*{state eq 'open' ? 'grey' : 'navy'} copyable|"
                                 th:id="${#ids.seq('copyable')}" th:text="*{title}"></button>
                             <input type="hidden" th:id="|description-${#ids.prev('copyable')}|"
                                 th:value="*{description}">

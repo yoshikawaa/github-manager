@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
     xmlns:my="https://io.github.yoshikawaa">
 <head>
-<title th:text="|Pull#${pull.number} ${pull.title}|"></title>
+<title th:text="|Issue#${issue.number} ${issue.title}|"></title>
 <th:block th:replace="~{partial/partials :: header}"></th:block>
 </head>
 <body>
@@ -10,11 +10,11 @@
     <div class="siimple-content--fluid">
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
-            <a class="siimple-breadcrumb-crumb" th:href="@{/search/pulls}">Search</a>
-            <a class="siimple-breadcrumb-crumb" href="#">Pull</a>
+            <a class="siimple-breadcrumb-crumb" th:href="@{/search/issues}">Search</a>
+            <a class="siimple-breadcrumb-crumb" href="#">Issue</a>
         </div>
 
-        <th:block th:object="${pull}">
+        <th:block th:object="${issue}">
             <div class="siimple-h1">
                 <a class="siimple-link" target="_blank" th:href="*{htmlUrl}" th:text="|#*{number}|"></a>
                 <span th:text="*{title}"></span>
@@ -22,21 +22,12 @@
             <div class="siimple-h6" th:switch="*{is()}">
                 <th:block th:case="closed">
                     <span class="siimple-tag siimple-tag--red">Closed</span>
-                    <span th:text="|closed at *{#temporals.format(closedAt, 'yyyy/MM/dd HH:mm')}|"></span>
-                </th:block>
-                <th:block th:case="merged" class="siimple-h3">
-                    <span class="siimple-tag siimple-tag--purple">Merged</span>
-                    <span th:text="|merged at *{#temporals.format(mergedAt, 'yyyy/MM/dd HH:mm')}|"></span>
-                </th:block>
-                <th:block th:case="mergeable" class="siimple-h3">
-                    <span class="siimple-tag siimple-tag--teal">Mergeable</span>
-                    <span th:text="|created at *{#temporals.format(createdAt, 'yyyy/MM/dd HH:mm')}|"></span>
+                    <span th:text="closed at *{#temporals.format(closedAt, 'yyyy/MM/dd HH:mm')}|"></span>
                 </th:block>
                 <th:block th:case="*" class="siimple-h3">
                     <span class="siimple-tag siimple-tag--green">Open</span>
                     <span th:text="|created at *{#temporals.format(createdAt, 'yyyy/MM/dd HH:mm')}|"></span>
                 </th:block>
-                <span th:text="|by *{user.login}|"></span>
                 <span class="siimple-tag siimple-tag--grey">
                     <i class="fas fa-check-square"></i>
                     <span th:text="|${statusSummary.get('checked')} / ${statusSummary.get('total')}|"></span>
@@ -66,7 +57,7 @@
                     <div class="siimple-table-row">
                         <div class="siimple-table-cell">Milestone</div>
                         <div class="siimple-table-cell">
-                            <a th:if="${pull.milestone} ne null" th:object="${pull.milestone}"
+                            <a th:if="${issue.milestone} ne null" th:object="${issue.milestone}"
                                 th:class="|siimple-btn siimple-btn--*{state eq 'open' ? 'grey' : 'navy'}|"
                                 target="_blank" th:href="*{htmlUrl}" th:text="*{title}"></a>
                         </div>
@@ -78,20 +69,6 @@
                 </div>
             </div>
         </th:block>
-
-        <span class="siimple-h6">Comment Summary</span>
-        <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
-            <div class="siimple-table-header">
-                <div class="siimple-table-row">
-                    <div class="siimple-table-cell" th:each="entry : ${commentSummary}" th:text="${entry.key}"></div>
-                </div>
-            </div>
-            <div class="siimple-table-body">
-                <div class="siimple-table-row">
-                    <div class="siimple-table-cell" th:each="entry : ${commentSummary}" th:text="${entry.value}"></div>
-                </div>
-            </div>
-        </div>
 
         <span class="siimple-h6">Comments</span>
         <div class="siimple-tip siimple-tip--teal" th:each="comment : ${comments}" th:object="${comment}">

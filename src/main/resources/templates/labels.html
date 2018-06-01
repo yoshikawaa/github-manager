@@ -2,11 +2,11 @@
 <head>
 <title>Labels</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"></script>
+<th:block th:replace="~{partial/partials :: header}"></th:block>
 </head>
 <body>
+    <th:block th:replace="~{partial/partials :: navbar}"></th:block>
+
     <div class="siimple-content--fluid">
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
@@ -16,9 +16,11 @@
         </div>
 
         <div class="siimple-h1">
-            Labels of <span th:text="|${owner}/${repo}|"></span>
+            Labels of
+            <span th:text="|${owner}/${repo}|"></span>
         </div>
 
+        <div class="siimple-alert siimple-alert--pink">Sorry, Now Description cannot be edited in Github API.</div>
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
@@ -46,14 +48,16 @@
                 <form class="siimple-table-row" method="post" th:action="@{labels/{name}(name=*{name})}"
                     th:each="label : ${labels}" th:object="${label}">
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid" name="name" th:value="*{name}" placeholder="name">
+                        <input class="siimple-input siimple-input--fluid" name="name" th:value="*{name}"
+                            placeholder="name">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid" name="description" th:value="*{description}"
                             placeholder="description">
                     </div>
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid jscolor" name="color" th:value="*{color}" placeholder="color">
+                        <input class="siimple-input siimple-input--fluid jscolor" name="color" th:value="*{color}"
+                            placeholder="color">
                     </div>
                     <div class="siimple-table-cell">
                         <button class="siimple-btn siimple-btn--green" name="update">Update</button>

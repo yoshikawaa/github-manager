@@ -1,12 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>Labels</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple@3.0.0/dist/siimple.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"></script>
+<th:block th:replace="~{partial/partials :: header}"></th:block>
 </head>
 <body>
+    <th:block th:replace="~{partial/partials :: navbar}"></th:block>
+
     <form class="siimple-content--fluid" method="post" th:action>
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
@@ -15,9 +14,11 @@
         </div>
 
         <div class="siimple-h1">
-            Manage Labels of <span th:text="|${owner}|"></span>
+            Manage Labels of
+            <span th:text="|${owner}|"></span>
         </div>
 
+        <div class="siimple-alert siimple-alert--pink">Sorry, Now Description cannot be edited in Github API.</div>
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
@@ -48,7 +49,8 @@
         </div>
 
         <div class="siimple-h1">
-            Labels of <span th:text="|${owner}|"></span>
+            Labels of
+            <span th:text="|${owner}|"></span>
         </div>
 
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
@@ -70,7 +72,8 @@
                     </div>
                     <div class="siimple-table-cell">
                         <th:block th:each="label : *{value}" th:object="${label}">
-                            <button type="button" class="siimple-btn copyable" th:style="|background-color: #*{color}|"
+                            <button type="button" class="siimple-btn copyable"
+                                th:style="|background-color:#*{color}; color:#*{#colors.letterColor(color)}|"
                                 th:id="${#ids.seq('copyable')}" th:text="*{name}"></button>
                             <input type="hidden" th:id="|description-${#ids.prev('copyable')}|"
                                 th:value="*{description}">
@@ -82,23 +85,22 @@
         </div>
     </form>
     <script>
-        $(".copyable").on("click", function() {
-            const key = $(this).text();
-            const id = $(this).attr("id");
-    
-            const name = $("input[name='name']");
-            const description = $("input[name='description']");
-            const color = $("input[name='color']");
-    
-            name.val(key);
-            description.val($("#description-" + id).val());
-            color.val($("#color-" + id).val());
-    
-            color[0].jscolor.fromString(color.val());
-    
-            $("button:contains('Update')").attr("formaction", "labels/" + key);
-            $("button:contains('Delete')").attr("formaction", "labels/" + key);
-        });
-    </script>
+		$(".copyable").on("click", function() {
+		    const key = $(this).text();
+			const id = $(this).attr("id");
+			const name = $("input[name='name']");
+			const description = $("input[name='description']");
+		    const color = $("input[name='color']");
+
+			name.val(key);
+			description.val($("#description-" + id).val());
+			color.val($("#color-" + id).val());
+
+			color[0].jscolor.fromString(color.val());
+
+			$("button:contains('Update')").attr("formaction", "labels/" + key);
+			$("button:contains('Delete')").attr("formaction", "labels/" + key);
+		});
+	</script>
 </body>
 </html>

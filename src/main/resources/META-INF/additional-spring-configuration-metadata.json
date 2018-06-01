@@ -23,15 +23,23 @@
   "type": "java.lang.String",
   "description": "url github api"
 },{
+  "name": "app.url.github-docs-search",
+  "type": "java.lang.String",
+  "description": "url github api docs"
+},{
+  "name": "app.url.github-docs-syntax",
+  "type": "java.lang.String",
+  "description": "url github api docs"
+},{
   "name": "app.pagination.per-page",
   "type": "java.lang.Integer",
-  "description": "pagination items per_page"
+  "description": "pagination per_page"
 },{
   "name": "app.analysis.comment.categories",
-  "type": "java.lang.Map",
-  "description": "analysis comment categories ([keyword: category] pattern)"
+  "type": "java.util.List",
+  "description": "analysis comment categories"
 },{
   "name": "app.analysis.comment.category-default",
   "type": "java.lang.String",
-  "description": "analysis default category"
+  "description": "analysis comment category default value"
 }]}
