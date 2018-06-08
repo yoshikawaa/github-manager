@@ -18,12 +18,10 @@
             <span th:text="|${owner}|"></span>
         </div>
 
-        <div class="siimple-alert siimple-alert--pink">Sorry, Now Description cannot be edited in Github API.</div>
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">Name</div>
-                    <div class="siimple-table-cell">Description</div>
                     <div class="siimple-table-cell">Color</div>
                     <div class="siimple-table-cell">Action</div>
                 </div>
@@ -32,9 +30,6 @@
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid" name="name" placeholder="name">
-                    </div>
-                    <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid" name="description" placeholder="description">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid jscolor" name="color" placeholder="color">
@@ -57,7 +52,12 @@
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">Repository</div>
-                    <div class="siimple-table-cell">Target</div>
+                    <div class="siimple-table-cell">
+                        <div class="siimple-checkbox">
+                            <input type="checkbox" id="all-repos" checked>
+                            <label for="all-repos"></label>
+                        </div>
+                    </div>
                     <div class="siimple-table-cell">Labels</div>
                 </div>
             </div>
@@ -65,8 +65,9 @@
                 <div class="siimple-table-row" th:each="labels : ${labelsMap}" th:object="${labels}">
                     <div class="siimple-table-cell" th:text="*{key}"></div>
                     <div class="siimple-table-cell">
-                        <div class="siimple-checkbox">
-                            <input type="checkbox" th:id="|repos-*{key}|" name="repos" th:value="*{key}" checked>
+                        <div class="siimple-checkbox" th:switch="*{#lists.contains(@unavailableRepos, key)}">
+                            <input th:case="true" type="checkbox" th:id="|repos-*{key}|" name="repos" th:value="*{key}" disabled>
+                            <input th:case="*" type="checkbox" th:id="|repos-*{key}|" name="repos" th:value="*{key}" checked>
                             <label th:for="|repos-*{key}|"></label>
                         </div>
                     </div>
@@ -75,8 +76,6 @@
                             <button type="button" class="siimple-btn copyable"
                                 th:style="|background-color:#*{color}; color:#*{#colors.letterColor(color)}|"
                                 th:id="${#ids.seq('copyable')}" th:text="*{name}"></button>
-                            <input type="hidden" th:id="|description-${#ids.prev('copyable')}|"
-                                th:value="*{description}">
                             <input type="hidden" th:id="|color-${#ids.prev('copyable')}|" th:value="*{color}">
                         </th:block>
                     </div>
@@ -85,22 +84,28 @@
         </div>
     </form>
     <script>
-		$(".copyable").on("click", function() {
-		    const key = $(this).text();
-			const id = $(this).attr("id");
-			const name = $("input[name='name']");
-			const description = $("input[name='description']");
-		    const color = $("input[name='color']");
-
-			name.val(key);
-			description.val($("#description-" + id).val());
-			color.val($("#color-" + id).val());
-
-			color[0].jscolor.fromString(color.val());
-
-			$("button:contains('Update')").attr("formaction", "labels/" + key);
-			$("button:contains('Delete')").attr("formaction", "labels/" + key);
-		});
+        $(".copyable").on("click", function() {
+            const key = $(this).text();
+            const id = $(this).attr("id");
+            const name = $("input[name='name']");
+            const color = $("input[name='color']");
+    
+            name.val(key);
+            color.val($("#color-" + id).val());
+    
+            color[0].jscolor.fromString(color.val());
+    
+            $("button:contains('Update')").attr("formaction", "labels/" + key);
+            $("button:contains('Delete')").attr("formaction", "labels/" + key);
+        });
+        $("#all-repos").on("change", function() {
+            const checked = this.checked;
+            $("[id^=repos-]").each(function() {
+            	if (!this.disabled) {
+                    this.checked = checked;
+            	}
+            });
+        });
 	</script>
 </body>
 </html>

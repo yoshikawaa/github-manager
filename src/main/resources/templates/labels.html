@@ -7,7 +7,7 @@
 <body>
     <th:block th:replace="~{partial/partials :: navbar}"></th:block>
 
-    <div class="siimple-content--fluid">
+    <div class="siimple-content--fluid" th:with="unavailable=${#lists.contains(@unavailableRepos, repo)}">
         <div class="siimple-breadcrumb">
             <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
             <a class="siimple-breadcrumb-crumb" th:href="@{/orgs}">Orgs</a>
@@ -20,12 +20,15 @@
             <span th:text="|${owner}/${repo}|"></span>
         </div>
 
-        <div class="siimple-alert siimple-alert--pink">Sorry, Now Description cannot be edited in Github API.</div>
+        <div class="siimple-alert siimple-alert--pink" th:if="${unavailable}">
+            Caution, You disabled this repository oparations. You can configure with property
+            <code>app.unavailable.repositories</code>
+            .
+        </div>
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">Name</div>
-                    <div class="siimple-table-cell">Description</div>
                     <div class="siimple-table-cell">Color</div>
                     <div class="siimple-table-cell">Action</div>
                 </div>
@@ -36,13 +39,10 @@
                         <input class="siimple-input siimple-input--fluid" name="name" placeholder="name">
                     </div>
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid" name="description" placeholder="description">
-                    </div>
-                    <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid jscolor" name="color" placeholder="color">
                     </div>
                     <div class="siimple-table-cell">
-                        <button class="siimple-btn siimple-btn--blue">Create</button>
+                        <button class="siimple-btn siimple-btn--blue" th:disabled="${unavailable}">Create</button>
                     </div>
                 </form>
                 <form class="siimple-table-row" method="post" th:action="@{labels/{name}(name=*{name})}"
@@ -52,16 +52,12 @@
                             placeholder="name">
                     </div>
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid" name="description" th:value="*{description}"
-                            placeholder="description">
-                    </div>
-                    <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid jscolor" name="color" th:value="*{color}"
                             placeholder="color">
                     </div>
                     <div class="siimple-table-cell">
-                        <button class="siimple-btn siimple-btn--green" name="update">Update</button>
-                        <button class="siimple-btn siimple-btn--pink" name="delete">Delete</button>
+                        <button class="siimple-btn siimple-btn--green" name="update" th:disabled="${unavailable}">Update</button>
+                        <button class="siimple-btn siimple-btn--pink" name="delete" th:disabled="${unavailable}">Delete</button>
                     </div>
                 </form>
             </div>

@@ -95,6 +95,15 @@ app:
       category-default: "[other]"
 ```
 
+### Disable Unavailable Repositories
 
+> Notice:: If you get an error such as '422 Not Found' in the operation of a repository that you can refer to, you may not have write permission. In that case, you can disable the repositories.
 
+Set repository name as properties in `application.yml`
 
+```yaml
+app:
+  unavailable:
+    repositories:
+    - name of unavailable repository
+```

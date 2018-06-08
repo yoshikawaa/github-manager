@@ -33,8 +33,7 @@
                         <a class="siimple-link" target="_blank" th:href="*{htmlUrl}" th:text="*{name}"></a>
                     </div>
                     <div class="siimple-table-cell"
-                        th:text="*{(not #strings.isEmpty(description)) and (#strings.length(description) gt 100) ?
-                                     #strings.substring(description,0,99) + '...' : description}"></div>
+                        th:text="*{#bytes.length(description) > 100 ? #bytes.truncate(description, 100) + '...' : description}"></div>
                     <div class="siimple-table-cell">
                         <div class="siimple-checkbox">
                             <input type="checkbox" id="hasIssues" th:checked="*{hasIssues}" readonly>

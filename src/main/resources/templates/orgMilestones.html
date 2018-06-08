@@ -62,7 +62,12 @@
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">Repository</div>
-                    <div class="siimple-table-cell">Target</div>
+                    <div class="siimple-table-cell">
+                        <div class="siimple-checkbox">
+                            <input type="checkbox" id="all-repos" checked>
+                            <label for="all-repos"></label>
+                        </div>
+                    </div>
                     <div class="siimple-table-cell">Milestones</div>
                 </div>
             </div>
@@ -70,8 +75,9 @@
                 <div class="siimple-table-row" th:each="milestones : ${milestonesMap}" th:object="${milestones}">
                     <div class="siimple-table-cell" th:text="*{key}"></div>
                     <div class="siimple-table-cell">
-                        <div class="siimple-checkbox">
-                            <input type="checkbox" th:id="|repos-*{key}|" name="repos" th:value="*{key}" checked>
+                        <div class="siimple-checkbox" th:switch="*{#lists.contains(@unavailableRepos, key)}">
+                            <input th:case="true" type="checkbox" th:id="|repos-*{key}|" name="repos" th:value="*{key}" disabled>
+                            <input th:case="*" type="checkbox" th:id="|repos-*{key}|" name="repos" th:value="*{key}" checked>
                             <label th:for="|repos-*{key}|"></label>
                         </div>
                     </div>
@@ -111,6 +117,14 @@
 
             $("button:contains('Update')").attr("formaction", "milestones/" + key);
             $("button:contains('Delete')").attr("formaction", "milestones/" + key);
+        });
+        $("#all-repos").on("change", function() {
+            const checked = this.checked;
+            $("[id^=repos-]").each(function() {
+                if (!this.disabled) {
+                    this.checked = checked;
+                }
+            });
         });
     </script>
 </body>

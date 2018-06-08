@@ -6,6 +6,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>github management application</name>
     <description>github management application</description>
+    <url>https://yoshikawaa.github.io</url>
+    <inceptionYear>2018</inceptionYear>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

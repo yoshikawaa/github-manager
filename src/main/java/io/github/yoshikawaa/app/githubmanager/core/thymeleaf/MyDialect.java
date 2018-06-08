@@ -1,6 +1,5 @@
 package io.github.yoshikawaa.app.githubmanager.core.thymeleaf;
 
-import java.util.Objects;
 import java.util.Set;
 
 import org.thymeleaf.context.IExpressionContext;
@@ -19,9 +18,11 @@ public class MyDialect extends AbstractProcessorDialect implements IExpressionOb
 
     private static final String DIALECT_NAME = "My Dialect";
     private static final String DIALECT_PREFIX = "my";
-    private static final String EXPRESSION_MARKDOWN = "markdowns";
+    private static final String EXPRESSION_BYTES = "bytes";
     private static final String EXPRESSION_COLOR = "colors";
-    private static final Set<String> EXPRESSION_NAMES = ImmutableSet.of(EXPRESSION_MARKDOWN, EXPRESSION_COLOR);
+    private static final String EXPRESSION_MARKDOWN = "markdowns";
+    private static final Set<String> EXPRESSION_NAMES = ImmutableSet.of(EXPRESSION_BYTES, EXPRESSION_COLOR,
+            EXPRESSION_MARKDOWN);
 
     private DataHolder options;
 
@@ -52,9 +53,14 @@ public class MyDialect extends AbstractProcessorDialect implements IExpressionOb
 
             @Override
             public Object buildObject(IExpressionContext context, String expressionObjectName) {
-                return Objects.equals(expressionObjectName, EXPRESSION_MARKDOWN)
-                        ? options == null ? new Markdowns() : new Markdowns(options)
-                        : new Colors();
+                switch (expressionObjectName) {
+                case EXPRESSION_BYTES:
+                    return new Bytes();
+                case EXPRESSION_COLOR:
+                    return new Colors();
+                default:
+                    return options == null ? new Markdowns() : new Markdowns(options);
+                }
             }
 
             @Override

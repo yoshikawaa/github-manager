@@ -35,6 +35,10 @@
   "type": "java.lang.Integer",
   "description": "pagination per_page"
 },{
+  "name": "app.unavailable.repositories",
+  "type": "java.util.List",
+  "description": "unavailable (ex. you don't have write permission) repositories"
+},{
   "name": "app.analysis.comment.categories",
   "type": "java.util.List",
   "description": "analysis comment categories"

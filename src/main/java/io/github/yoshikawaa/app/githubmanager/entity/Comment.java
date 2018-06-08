@@ -19,8 +19,9 @@ public class Comment {
     private String htmlUrl;
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
-    @JsonIgnore
-    private String category;
     
     private User user;
+
+    @JsonIgnore
+    private String category;
 }
