@@ -1,5 +1,7 @@
 # github-manager
 
+[![Build Status](https://travis-ci.org/yoshikawaa/github-manager.svg?branch=master)](https://travis-ci.org/yoshikawaa/github-manager)
+
 Simple Github Management Application using [Github API v3](https://developer.github.com/v3/).
 
 ## Features
