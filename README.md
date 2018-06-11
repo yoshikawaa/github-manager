@@ -99,7 +99,7 @@ app:
 
 ### Disable Unavailable Repositories
 
-> Notice:: If you get an error such as '422 Not Found' in the operation of a repository that you can refer to, you may not have write permission. In that case, you can disable the repositories.
+> Notice:: If you get an API error such as '404 Not Found' in the operation of a repository that you can refer to, you may not have write permission. In that case, you can disable the repositories.
 
 Set repository name as properties in `application.yml`
 

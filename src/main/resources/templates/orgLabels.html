@@ -29,7 +29,8 @@
             <div class="siimple-table-body">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid" name="name" placeholder="name">
+                        <input class="siimple-input siimple-input--fluid tippy" name="name" placeholder="name"
+                            title="Labels including '/' in Name cannot change / delete.">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid jscolor" name="color" placeholder="color">
@@ -84,6 +85,7 @@
         </div>
     </form>
     <script>
+        tippy(".tippy", { placement : "bottom" });
         $(".copyable").on("click", function() {
             const key = $(this).text();
             const id = $(this).attr("id");

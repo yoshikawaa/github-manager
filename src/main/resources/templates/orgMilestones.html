@@ -30,7 +30,8 @@
             <div class="siimple-table-body">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid" name="title" placeholder="title">
+                        <input class="siimple-input siimple-input--fluid tippy" name="title" placeholder="title"
+                            title="Milestones including '/' in Title cannot change / delete.">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid" name="description" placeholder="description">
@@ -45,7 +46,7 @@
                         </select>
                     </div>
                     <div class="siimple-table-cell">
-                        <button class="siimple-btn siimple-btn--blue">Create</button>
+                        <button class="siimple-btn siimple-btn--blue" title="hoge">Create</button>
                         <button class="siimple-btn siimple-btn--green" name="update">Update</button>
                         <button class="siimple-btn siimple-btn--pink" name="delete">Delete</button>
                     </div>
@@ -98,9 +99,8 @@
         </div>
     </form>
     <script>
-        $(function() {
-            $(".datetimepicker").datetimepicker();
-        });
+        tippy(".tippy", { placement : "bottom" });
+        $(".datetimepicker").datetimepicker();
         $(".copyable").on("click", function() {
             const key = $(this).text();
             const id = $(this).attr("id");
