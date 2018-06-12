@@ -34,10 +34,10 @@
                     <div class="siimple-table-cell">
                         <a class="siimple-btn siimple-btn--blue"
                             th:href="@{/repos/{owner}(owner=${#authentication.name})}">Repos</a>
-                        <a class="siimple-btn siimple-btn--blue"
+                        <a class="siimple-btn siimple-btn--blue tippy"
                             th:href="@{/orgs/{owner}/labels(owner=${#authentication.name})}"
                             title="Caution! Very Heavy!!!">Labels</a>
-                        <a class="siimple-btn siimple-btn--blue"
+                        <a class="siimple-btn siimple-btn--blue tippy"
                             th:href="@{/orgs/{owner}/milestones(owner=${#authentication.name})}"
                             title="Caution! Very Heavy!!!">Milestones</a>
                     </div>
@@ -49,17 +49,14 @@
                     </div>
                     <div class="siimple-table-cell">
                         <a class="siimple-btn siimple-btn--blue" th:href="@{/repos/{owner}(owner=*{login})}">Repos</a>
-                        <a class="siimple-btn siimple-btn--blue" th:href="@{/orgs/{owner}/labels(owner=*{login})}"
-                            title="Caution! Very Heavy!!!">Labels</a>
-                        <a class="siimple-btn siimple-btn--blue" th:href="@{/orgs/{owner}/milestones(owner=*{login})}"
-                            title="Caution! Very Heavy!!!">Milestones</a>
+                        <a class="siimple-btn siimple-btn--blue  tippy"
+                            th:href="@{/orgs/{owner}/labels(owner=*{login})}" title="Caution! Very Heavy!!!">Labels</a>
+                        <a class="siimple-btn siimple-btn--blue  tippy"
+                            th:href="@{/orgs/{owner}/milestones(owner=*{login})}" title="Caution! Very Heavy!!!">Milestones</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-		tippy("a", { placement : "bottom" });
-	</script>
 </body>
 </html>

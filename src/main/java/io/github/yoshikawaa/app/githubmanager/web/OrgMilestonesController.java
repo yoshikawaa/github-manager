@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.github.yoshikawaa.app.githubmanager.core.web.UrlUtils;
 import io.github.yoshikawaa.app.githubmanager.entity.Milestone;
 import io.github.yoshikawaa.app.githubmanager.entity.Repository;
 
@@ -69,17 +70,19 @@ public class OrgMilestonesController extends AbstractRestClientController {
         return "redirect:/orgs/{owner}/milestones?complete";
     }
 
-    @PostMapping(path = "/{title}", params = "update")
+    @PostMapping(path = "/{title}/**", params = "update")
     public String milestonesUpdate(@ModelAttribute("milestonesMap") Map<String, Milestone[]> milestonesMap,
             @PathVariable("owner") String owner,
             @RequestParam("repos") List<String> repos,
             @PathVariable("title") String title,
             @Validated Milestone milestone) {
+        // Resolve Title contains "/".
+        String realTitle = UrlUtils.pathVariableWithSlash(title);
         milestonesMap.entrySet().stream()
             .filter(e -> repos.contains(e.getKey()))
             .forEach(entry -> {
                 Arrays.stream(entry.getValue())
-                    .filter(m -> Objects.equals(m.getTitle(), title))
+                    .filter(m -> Objects.equals(m.getTitle(), realTitle))
                     .map(Milestone::getNumber)
                     .findFirst()
                     .ifPresent(number -> {
@@ -92,16 +95,18 @@ public class OrgMilestonesController extends AbstractRestClientController {
         return "redirect:/orgs/{owner}/milestones?complete";
     }
 
-    @PostMapping(path = "/{title}", params = "delete")
+    @PostMapping(path = "/{title}/**", params = "delete")
     public String milestonesDelete(@ModelAttribute("milestonesMap") Map<String, Milestone[]> milestonesMap,
             @PathVariable("owner") String owner,
             @RequestParam("repos") List<String> repos,
             @PathVariable("title") String title) {
+        // Resolve Title contains "/".
+        String realTitle = UrlUtils.pathVariableWithSlash(title);
         milestonesMap.entrySet().stream()
             .filter(e -> repos.contains(e.getKey()))
             .forEach(entry -> {
                 Arrays.stream(entry.getValue())
-                    .filter(m -> Objects.equals(m.getTitle(), title))
+                    .filter(m -> Objects.equals(m.getTitle(), realTitle))
                     .map(Milestone::getNumber)
                     .findFirst()
                     .ifPresent(number -> {

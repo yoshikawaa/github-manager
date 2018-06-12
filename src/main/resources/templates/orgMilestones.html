@@ -30,8 +30,7 @@
             <div class="siimple-table-body">
                 <div class="siimple-table-row">
                     <div class="siimple-table-cell">
-                        <input class="siimple-input siimple-input--fluid tippy" name="title" placeholder="title"
-                            title="Milestones including '/' in Title cannot change / delete.">
+                        <input class="siimple-input siimple-input--fluid" name="title" placeholder="title">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid" name="description" placeholder="description">
@@ -99,8 +98,6 @@
         </div>
     </form>
     <script>
-        tippy(".tippy", { placement : "bottom" });
-        $(".datetimepicker").datetimepicker();
         $(".copyable").on("click", function() {
             const key = $(this).text();
             const id = $(this).attr("id");

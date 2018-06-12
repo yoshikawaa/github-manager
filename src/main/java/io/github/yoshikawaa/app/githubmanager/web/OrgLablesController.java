@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.github.yoshikawaa.app.githubmanager.core.web.UrlUtils;
 import io.github.yoshikawaa.app.githubmanager.entity.Label;
 import io.github.yoshikawaa.app.githubmanager.entity.Repository;
 
@@ -67,38 +68,42 @@ public class OrgLablesController extends AbstractRestClientController {
         return "redirect:/orgs/{owner}/labels?complete";
     }
 
-    @PostMapping(path = "/{name}", params = "update")
+    @PostMapping(path = "/{name}/**", params = "update")
     public String labelsUpdate(@ModelAttribute("labelsMap") Map<String, Label[]> labelsMap,
             @PathVariable("owner") String owner,
             @RequestParam("repos") List<String> repos,
             @PathVariable("name") String name,
             @Validated Label label) {
+        // Resolve Name contains "/".
+        String realName = UrlUtils.pathVariableWithSlash(name);
         labelsMap.entrySet().stream()
             .filter(e -> repos.contains(e.getKey())
-                    && Arrays.stream(e.getValue()).anyMatch(l -> Objects.equals(l.getName(), name)))
+                    && Arrays.stream(e.getValue()).anyMatch(l -> Objects.equals(l.getName(), realName)))
             .map(Entry::getKey)
             .forEach(repo -> {
                 URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                         .path("/repos/{owner}/{repo}/labels/{name}")
-                        .build(owner, repo, name);
+                        .build(owner, repo, realName);
                 restOperations.patchForObject(uri, label, Label.class);
         });
         return "redirect:/orgs/{owner}/labels?complete";
     }
 
-    @PostMapping(path = "/{name}", params = "delete")
+    @PostMapping(path = "/{name}/**", params = "delete")
     public String labelsDelete(@ModelAttribute("labelsMap") Map<String, Label[]> labelsMap, 
             @PathVariable("owner") String owner,
             @RequestParam("repos") List<String> repos,
             @PathVariable("name") String name) {
+        // Resolve Name contains "/".
+        String realName = UrlUtils.pathVariableWithSlash(name);
         labelsMap.entrySet().stream()
             .filter(e -> repos.contains(e.getKey())
-                    && Arrays.stream(e.getValue()).anyMatch(l -> Objects.equals(l.getName(), name)))
+                    && Arrays.stream(e.getValue()).anyMatch(l -> Objects.equals(l.getName(), realName)))
             .map(Entry::getKey)
             .forEach(repo -> {
                 URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                         .path("/repos/{owner}/{repo}/labels/{name}")
-                        .build(owner, repo, name);
+                        .build(owner, repo, realName);
                 restOperations.delete(uri);
         });
         return "redirect:/orgs/{owner}/labels?complete";

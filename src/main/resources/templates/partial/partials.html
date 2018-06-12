@@ -11,6 +11,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 <script src="https://unpkg.com/tippy.js@2.5.2/dist/tippy.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.4/dist/loadingoverlay.min.js"></script>
+<script id="common-scripts" type="text/javascript">
+	$(function() {
+		const loading = () => $.LoadingOverlay("show", {
+			background : "rgba(255, 255, 255, 0.5)",
+			image : "",
+			fontawesome : "fa fa-cog fa-spin"
+		});
+		$("form").on("submit", function() {
+		    loading();
+		});
+		$("a:not([target='_blank'])").on("click", function() {
+            loading();
+		});
+        tippy(".tippy", { placement : "bottom" });
+        $(".datetimepicker").datetimepicker();
+	});
+</script>
 </head>
 <body>
     <div th:fragment="navbar" th:remove="tag">
