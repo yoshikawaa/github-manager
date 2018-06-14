@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header" th:remove="tag">
 <meta charset="utf-8">
 <link rel="shortcut icon" href="https://paulferrett.com/fontawesome-favicon/generate.php?icon=github&fg=222">
@@ -25,8 +25,8 @@
 		$("a:not([target='_blank'])").on("click", function() {
             loading();
 		});
-        tippy(".tippy", { placement : "bottom" });
         $(".datetimepicker").datetimepicker();
+        tippy(".tippy", { placement : "bottom" });
 	});
 </script>
 </head>
@@ -42,6 +42,13 @@
                 <a class="siimple-navbar-link" th:href="@{/orgs}">Orgs</a>
                 <a class="siimple-navbar-link" th:href="@{/search/issues}">Issues</a>
                 <a class="siimple-navbar-link" th:href="@{/search/pulls}">Pulls</a>
+                <div class="siimple-navbar-item"
+                    th:with="details=${#oauth2authentication.userAuthentication.details}">
+                    <a target="_blank" th:href="${details.get('html_url')}">
+                        <img class="avatar avatar-circle tippy" th:src="${details.get('avatar_url')}"
+                            th:title="|Enjoy ${#authentication.name}!|"></img>
+                    </a>
+                </div>
             </div>
         </div>
         <br>

@@ -21,8 +21,9 @@ public class MyDialect extends AbstractProcessorDialect implements IExpressionOb
     private static final String EXPRESSION_BYTES = "bytes";
     private static final String EXPRESSION_COLOR = "colors";
     private static final String EXPRESSION_MARKDOWN = "markdowns";
+    private static final String EXPRESSION_OAUTH2_AUTHENTICATION = "oauth2authentication";
     private static final Set<String> EXPRESSION_NAMES = ImmutableSet.of(EXPRESSION_BYTES, EXPRESSION_COLOR,
-            EXPRESSION_MARKDOWN);
+            EXPRESSION_MARKDOWN, EXPRESSION_OAUTH2_AUTHENTICATION);
 
     private DataHolder options;
 
@@ -58,6 +59,8 @@ public class MyDialect extends AbstractProcessorDialect implements IExpressionOb
                     return new Bytes();
                 case EXPRESSION_COLOR:
                     return new Colors();
+                case EXPRESSION_OAUTH2_AUTHENTICATION:
+                    return new OAuth2Authentications();
                 default:
                     return options == null ? new Markdowns() : new Markdowns(options);
                 }
