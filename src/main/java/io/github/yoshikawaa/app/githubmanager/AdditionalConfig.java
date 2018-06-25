@@ -1,6 +1,8 @@
 package io.github.yoshikawaa.app.githubmanager;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +45,7 @@ public class AdditionalConfig {
     @ApplicationScope
     @Bean("unavailableRepos")
     public List<String> unavailableRepos(Unavailable unavailable) {
-        return unavailable.getRepositories();
+        return Optional.ofNullable(unavailable.getRepositories()).orElse(Collections.emptyList());
     }
     
     @Component
