@@ -11,3 +11,64 @@ img.avatar-circle {
 	-moz-border-image: border-radius: 150px;
 	-webkit-border-image: border-radius: 150px;
 }
+
+.siimple-navbar--fixed {
+	position: fixed;
+}
+
+.siimple-content--fluid {
+	padding-top: 60px;
+}
+
+.siimple-table-cell {
+	white-space: normal !important;
+	overflow: visible !important;
+}
+
+.siimple-table-cell--1 {
+	width: 8.33%;
+}
+
+.siimple-table-cell--2 {
+	width: 16.66%;
+}
+
+.siimple-table-cell--3 {
+	width: 24.99%;
+}
+
+.siimple-table-cell--4 {
+	width: 33.33%;
+}
+
+.siimple-table-cell--5 {
+	width: 41.66%;
+}
+
+.siimple-table-cell--6 {
+	width: 49.99%;
+}
+
+.siimple-table-cell--7 {
+	width: 58.33%;
+}
+
+.siimple-table-cell--8 {
+	width: 66.66%;
+}
+
+.siimple-table-cell--9 {
+	width: 74.99%;
+}
+
+.siimple-table-cell--10 {
+	width: 83.33%;
+}
+
+.siimple-table-cell--11 {
+	width: 91.66%;
+}
+
+.siimple-table-cell--12 {
+	width: 99.99%;
+}

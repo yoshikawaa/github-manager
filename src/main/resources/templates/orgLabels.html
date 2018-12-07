@@ -21,9 +21,9 @@
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
-                    <div class="siimple-table-cell">Name</div>
-                    <div class="siimple-table-cell">Color</div>
-                    <div class="siimple-table-cell">Action</div>
+                    <div class="siimple-table-cell siimple-table-cell--4">Name</div>
+                    <div class="siimple-table-cell siimple-table-cell--4">Color</div>
+                    <div class="siimple-table-cell siimple-table-cell--4">Action</div>
                 </div>
             </div>
             <div class="siimple-table-body">
@@ -51,14 +51,14 @@
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
-                    <div class="siimple-table-cell">Repository</div>
-                    <div class="siimple-table-cell">
+                    <div class="siimple-table-cell siimple-table-cell--3">Repository</div>
+                    <div class="siimple-table-cell siimple-table-cell--1">
                         <div class="siimple-checkbox">
                             <input type="checkbox" id="all-repos" checked>
                             <label for="all-repos"></label>
                         </div>
                     </div>
-                    <div class="siimple-table-cell">Labels</div>
+                    <div class="siimple-table-cell siimple-table-cell--8">Labels</div>
                 </div>
             </div>
             <div class="siimple-table-body">
@@ -97,6 +97,8 @@
     
             $("button:contains('Update')").attr("formaction", "labels/" + key);
             $("button:contains('Delete')").attr("formaction", "labels/" + key);
+
+            $("html,body").animate({  scrollTop: $('form').offset().top  });
         });
         $("#all-repos").on("change", function() {
             const checked = this.checked;
