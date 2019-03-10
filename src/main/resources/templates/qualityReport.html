@@ -1,0 +1,111 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<title>Quality Report</title>
+<th:block th:replace="~{partial/partials :: header}"></th:block>
+</head>
+<body>
+    <th:block th:replace="~{partial/partials :: navbar}"></th:block>
+
+    <form class="siimple-content--fluid" method="get" th:action data-loading-time="10000">
+        <div class="siimple-breadcrumb">
+            <a class="siimple-breadcrumb-crumb" th:href="@{/}">Home</a>
+            <a class="siimple-breadcrumb-crumb" th:href="@{/orgs}">Orgs</a>
+            <a class="siimple-breadcrumb-crumb" href="#">Quality Report</a>
+        </div>
+
+        <div class="siimple-h1">
+            Quality Report of
+            <span th:text="|${owner}|"></span>
+        </div>
+
+        <div class="siimple-form siimple-grid" th:object="${qualityReportQuery}">
+            <div class="siimple-form-title">Search Query</div>
+            <div class="siimple-form-detail">Very heavy, please strictly narrow down.</div>
+
+            <div class="siimple-form-field siimple-grid-row">
+                <div class="siimple-grid-col siimple-grid-col--6">
+                    <label class="siimple-label" for="label">Label</label>
+                    <input class="siimple-input siimple-input--fluid" th:field="*{label}">
+                </div>
+            </div>
+
+            <div class="siimple-form-field siimple-grid-row">
+                <div class="siimple-grid-col siimple-grid-col--6">
+                    <label class="siimple-label" for="created">Created</label>
+                    <input class="siimple-input siimple-input--fluid" th:field="*{created}">
+                </div>
+                <div class="siimple-grid-col siimple-grid-col--6">
+                    <label class="siimple-label" for="updated">Updated</label>
+                    <input class="siimple-input siimple-input--fluid" th:field="*{updated}">
+                </div>
+            </div>
+
+            <div class="siimple-form-field siimple-grid-row">
+                <div class="siimple-grid-col siimple-grid-col--6">
+                    <label class="siimple-label" for="merged">Merged</label>
+                    <input class="siimple-input siimple-input--fluid" th:field="*{merged}">
+                </div>
+                <div class="siimple-grid-col siimple-grid-col--6">
+                    <label class="siimple-label" for="closed">Closed</label>
+                    <input class="siimple-input siimple-input--fluid" th:field="*{closed}">
+                </div>
+            </div>
+            <div class="siimple-form-field siimple-grid-row">
+                <div class="siimple-grid-col siimple-grid-col--12">
+                    <div class="siimple-tip siimple-tip--yellow siimple-tip--question">
+                        Date Range Format "<code>&lt;2015-05-01</code>" , "<code>&gt;=2015-05-01</code>" , "<code>2015-05-01..2015-05-30</code>"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
+            <div class="siimple-table-header">
+                <div class="siimple-table-row">
+                    <div class="siimple-table-cell siimple-table-cell--3">Name</div>
+                    <div class="siimple-table-cell siimple-table-cell--6">Description</div>
+                    <div class="siimple-table-cell siimple-table-cell--1">
+                        <div class="siimple-checkbox">
+                            <input type="checkbox" id="all-repos" checked>
+                            <label for="all-repos"></label>
+                        </div>
+                    </div>
+                    <div class="siimple-table-cell siimple-table-cell--2">
+                        <button class="siimple-btn siimple-btn--blue tippy" name="org"
+                            title="Caution! Very Heavy!!!">Report Checked</button>
+                    </div>
+                </div>
+            </div>
+            <div class="siimple-table-body">
+                <div class="siimple-table-row" th:each="repo : ${repos}" th:object="${repo}">
+                    <div class="siimple-table-cell">
+                        <a class="siimple-link" target="_blank" th:href="*{htmlUrl}" th:text="*{name}"></a>
+                    </div>
+                    <div class="siimple-table-cell" th:text="*{description}"></div>
+                    <div class="siimple-table-cell">
+                        <div class="siimple-checkbox" th:switch="*{#lists.contains(@unavailableRepos, name)}">
+                            <input th:case="true" type="checkbox" th:id="|repos-*{name}|" name="repos" th:value="*{name}" disabled>
+                            <input th:case="*" type="checkbox" th:id="|repos-*{name}|" name="repos" th:value="*{name}" checked>
+                            <label th:for="|repos-*{name}|"></label>
+                        </div>
+                    </div>
+                    <div class="siimple-table-cell">
+                        <button class="siimple-btn siimple-btn--blue tippy" name="repo" th:value="*{name}"
+                            title="Caution! Very Heavy!!!">Report Only This</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        $("#all-repos").on("change", function() {
+            const checked = this.checked;
+            $("[id^=repos-]").each(function() {
+                if (!this.disabled) {
+                    this.checked = checked;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

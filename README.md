@@ -34,6 +34,12 @@ Analysis your and public repository's pull requests.
 
 * You can categorize and summary comments in pull requests.
 
+### Pull Requests quality reports 
+
+Download your and public repository's pull requests quality reports.
+
+* You can categorize and summary comment checkboxes in pull requests.
+
 ## How to use
 
 > Notice:: If you don't have client id, you must register App at [Github - Register a new OAuth application](https://github.com/settings/applications/new).
@@ -82,7 +88,6 @@ app:
     per-page: 100
 ```
 
-
 ### Categories of Pull Request Comments
 
 Set categories key as properties in `application.yml`
@@ -95,6 +100,19 @@ app:
         - "[good]"
         - "[bad]"
       category-default: "[other]"
+```
+
+### Associate Pull Request repositories to Issue managed repository
+
+Associate repositories as properties in `application.yml`
+
+```yaml
+app:
+  issuemanage:
+    repositories:
+      "pull-request-repository": "issue-managed-repository"
+      "pull-request-repository": "issue-managed-repository"
+      "pull-request-repository": "issue-managed-repository"
 ```
 
 ### Disable Unavailable Repositories

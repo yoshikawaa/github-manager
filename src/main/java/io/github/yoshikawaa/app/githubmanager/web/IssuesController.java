@@ -29,7 +29,7 @@ public class IssuesController extends AbstractRestClientController {
     private Counter<String> counter;
 
     @GetMapping("/{number}")
-    public String pull(Model model, @PathVariable("owner") String owner, @PathVariable("repo") String repo,
+    public String issue(Model model, @PathVariable("owner") String owner, @PathVariable("repo") String repo,
             @PathVariable("number") int number) {
         URI issueUrl = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/issues/{number}")

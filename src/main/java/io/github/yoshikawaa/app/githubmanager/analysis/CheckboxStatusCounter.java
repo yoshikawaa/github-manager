@@ -10,8 +10,8 @@ import com.google.common.collect.ImmutableMap;
 @Component
 public class CheckboxStatusCounter implements Counter<String> {
 
-    private static final String LABEL_CHECKED = "checked";
-    private static final String LABEL_TOTAL = "total";
+    public static final String LABEL_CHECKED = "checked";
+    public static final String LABEL_TOTAL = "total";
     private static final String KEY_CHECKED = "- [x]";
     private static final String KEY_NON_CHECKED = "- [ ]";
     

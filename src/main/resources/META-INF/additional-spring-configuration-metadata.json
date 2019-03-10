@@ -39,6 +39,10 @@
   "type": "java.util.List",
   "description": "unavailable (ex. you don't have write permission) repositories"
 },{
+  "name": "app.issuemanage.repositories",
+  "type": "java.util.Map",
+  "description": "issue manage repositories"
+},{
   "name": "app.analysis.comment.categories",
   "type": "java.util.List",
   "description": "analysis comment categories"
