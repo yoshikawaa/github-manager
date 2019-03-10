@@ -17,11 +17,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
-import io.github.yoshikawaa.app.githubmanager.analysis.CheckboxStatusCounter;
+import io.github.yoshikawaa.app.githubmanager.analysis.CounterService;
+import io.github.yoshikawaa.app.githubmanager.api.entity.Issue;
+import io.github.yoshikawaa.app.githubmanager.api.entity.Label;
 import io.github.yoshikawaa.app.githubmanager.core.web.view.AbstractXlsxWorkSheetView;
-import io.github.yoshikawaa.app.githubmanager.entity.Issue;
-import io.github.yoshikawaa.app.githubmanager.entity.Label;
-import io.github.yoshikawaa.app.githubmanager.entity.report.PullRequestReport;
+import io.github.yoshikawaa.app.githubmanager.web.entity.PullRequestReport;
 
 @Component
 public class QualityReportView extends AbstractXlsxWorkSheetView {
@@ -38,15 +38,13 @@ public class QualityReportView extends AbstractXlsxWorkSheetView {
             HttpServletResponse response) throws Exception {
 
         // get model attributes
-        String reportName = String.valueOf(model.get("reportName"));
+        final String reportName = String.valueOf(model.get("reportName"));
         @SuppressWarnings("unchecked")
-        Map<String, MultiValueMap<Issue, PullRequestReport>> reports = (Map<String, MultiValueMap<Issue, PullRequestReport>>) model
+        final Map<String, MultiValueMap<Issue, PullRequestReport>> reports = (Map<String, MultiValueMap<Issue, PullRequestReport>>) model
                 .get("reports");
 
-        // create sheet
         // create work sheet
-        Sheet sheet = workbook.createSheet(reportName);
-
+        final Sheet sheet = workbook.createSheet(reportName);
         final AtomicInteger row = new AtomicInteger(0);
         final AtomicInteger cell = new AtomicInteger(0);
 
@@ -67,30 +65,24 @@ public class QualityReportView extends AbstractXlsxWorkSheetView {
 
                     style = dataRowStyle(workbook.createCellStyle(), row.get());
                     currentRow = row(sheet, row, cell);
-                    if (issue != null) {
-                        cell(currentRow, cell, style).setCellValue(issue.getRepo());
-                        cell(currentRow, cell, style).setCellValue(issue.getNumber());
-                        cell(currentRow, cell, style).setCellValue(issue.getTitle());
-                        cell(currentRow, cell, style)
-                                .setCellValue((issue.getMilestone() == null) ? null : issue.getMilestone().getTitle());
-                        cell(currentRow, cell, style).setCellValue((issue.getMilestone() == null) ? null
-                                : String.join(",", issue.getLabels()
-                                        .stream()
-                                        .map(Label::getName)
-                                        .filter(l -> l.startsWith(PREFIX_TYPE))
-                                        .collect(Collectors.toList())));
-                    }
-                    if (pull != null) {
-                        cell(currentRow, cell, style).setCellValue(pull.getRepo());
-                        cell(currentRow, cell, style).setCellValue(pull.getNumber());
-                        cell(currentRow, cell, style).setCellValue(pull.getTitle());
-                        cell(currentRow, cell, style).setCellValue(pull.getState());
-                        cell(currentRow, cell, style)
-                                .setCellValue(statusSummary.get(CheckboxStatusCounter.LABEL_TOTAL));
-                        cell(currentRow, cell, style)
-                                .setCellValue(statusSummary.get(CheckboxStatusCounter.LABEL_CHECKED));
-                        cell(currentRow, cell, style).setCellValue(pull.getHtmlUrl());
-                    }
+                    cell(currentRow, cell, style).setCellValue(issue.getRepo());
+                    cell(currentRow, cell, style).setCellValue(issue.getNumber());
+                    cell(currentRow, cell, style).setCellValue(issue.getTitle());
+                    cell(currentRow, cell, style)
+                            .setCellValue(issue.getMilestone() == null ? null : issue.getMilestone().getTitle());
+                    cell(currentRow, cell, style).setCellValue(issue.getMilestone() == null ? null
+                            : String.join(",", issue.getLabels()
+                                    .stream()
+                                    .map(Label::getName)
+                                    .filter(l -> l.startsWith(PREFIX_TYPE))
+                                    .collect(Collectors.toList())));
+                    cell(currentRow, cell, style).setCellValue(pull.getRepo());
+                    cell(currentRow, cell, style).setCellValue(pull.getNumber());
+                    cell(currentRow, cell, style).setCellValue(pull.getTitle());
+                    cell(currentRow, cell, style).setCellValue(pull.getState());
+                    cell(currentRow, cell, style).setCellValue(statusSummary.get(CounterService.LABEL_TOTAL));
+                    cell(currentRow, cell, style).setCellValue(statusSummary.get(CounterService.LABEL_CHECKED));
+                    cell(currentRow, cell, style).setCellValue(pull.getHtmlUrl());
                 }
             }
         }

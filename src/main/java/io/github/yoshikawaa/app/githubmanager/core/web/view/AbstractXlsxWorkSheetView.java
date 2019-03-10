@@ -21,7 +21,7 @@ import org.springframework.web.servlet.view.document.AbstractXlsxView;
 
 public abstract class AbstractXlsxWorkSheetView extends AbstractXlsxView {
 
-    private static final String EXTENSION = ".xlsx";
+    private static final String FILENAME_EXTENSION = ".xlsx";
 
     protected Row row(Sheet sheet, AtomicInteger row, AtomicInteger cell) {
         cell.set(0);
@@ -67,7 +67,7 @@ public abstract class AbstractXlsxWorkSheetView extends AbstractXlsxView {
 
     protected void setContentDisposition(HttpServletResponse response, String filename, Charset charset)
             throws UnsupportedEncodingException {
-        String encodedFilename = URLEncoder.encode(filename + EXTENSION, charset.name());
+        String encodedFilename = URLEncoder.encode(filename + FILENAME_EXTENSION, charset.name());
         response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFilename);
     }
 }

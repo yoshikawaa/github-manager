@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>Quality Report</title>
@@ -18,7 +19,7 @@
             <span th:text="|${owner}|"></span>
         </div>
 
-        <div class="siimple-form siimple-grid" th:object="${qualityReportQuery}">
+        <div class="siimple-form siimple-grid" th:object="${reportSearchQuery}">
             <div class="siimple-form-title">Search Query</div>
             <div class="siimple-form-detail">Very heavy, please strictly narrow down.</div>
 

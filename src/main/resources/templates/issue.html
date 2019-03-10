@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
     xmlns:my="https://io.github.yoshikawaa">
 <head>
@@ -41,7 +42,7 @@
                         <div class="siimple-table-cell">
                             <a class="siimple-link" th:each="assignee : *{assignees}" th:object="${assignee}"
                                 target="_blank" th:href="*{htmlUrl}">
-                                <img class="avatar" th:src="*{avatarUrl}"></img>
+                                <img class="avatar" th:src="*{avatarUrl}">
                                 <span th:text="*{login}"></span>
                             </a>
                         </div>

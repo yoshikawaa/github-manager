@@ -3,7 +3,6 @@ package io.github.yoshikawaa.app.githubmanager.web;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,25 +23,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.common.collect.ImmutableMap;
 
-import io.github.yoshikawaa.app.githubmanager.analysis.Counter;
-import io.github.yoshikawaa.app.githubmanager.analysis.Referancer;
-import io.github.yoshikawaa.app.githubmanager.core.web.QueryBuilder;
-import io.github.yoshikawaa.app.githubmanager.entity.Comment;
-import io.github.yoshikawaa.app.githubmanager.entity.Issue;
-import io.github.yoshikawaa.app.githubmanager.entity.Repository;
-import io.github.yoshikawaa.app.githubmanager.entity.query.QualityReportQuery;
-import io.github.yoshikawaa.app.githubmanager.entity.report.PullRequestReport;
-import io.github.yoshikawaa.app.githubmanager.entity.response.IssuesResponse;
+import io.github.yoshikawaa.app.githubmanager.analysis.CounterService;
+import io.github.yoshikawaa.app.githubmanager.analysis.ExtractorService;
+import io.github.yoshikawaa.app.githubmanager.api.entity.Comment;
+import io.github.yoshikawaa.app.githubmanager.api.entity.Issue;
+import io.github.yoshikawaa.app.githubmanager.api.query.ReportSearchQuery;
+import io.github.yoshikawaa.app.githubmanager.api.response.IssuesResponse;
+import io.github.yoshikawaa.app.githubmanager.web.entity.PullRequestReport;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/quality-report/{owner}")
 @Slf4j
-public class QualityReportController extends AbstractRestClientController {
+public class QualityReportController extends AbstractGithubApiController {
 
     private static final Issue DEFAULT_ISSUE = new Issue();
 
@@ -51,36 +47,28 @@ public class QualityReportController extends AbstractRestClientController {
     private Map<String, String> issueManageRepos;
 
     @Autowired
-    private Counter<String> counter;
+    private CounterService counter;
 
     @Autowired
-    private Referancer referencer;
+    private ExtractorService extractor;
 
     @GetMapping
     public String view(Model model, @PathVariable("owner") String owner, Authentication authentication,
-            QualityReportQuery query) {
-        URI reposUri = UriComponentsBuilder.fromUriString(baseUrl)
-                .path(owner.equals(authentication.getName()) ? "/users/{org}/repos" : "/orgs/{org}/repos")
-                .queryParam("per_page", perPage)
-                .build(owner);
-        model.addAttribute("repos", restOperations.getForEntity(reposUri, Repository[].class).getBody());
+            ReportSearchQuery query) {
+        model.addAttribute("repos", api.repos(owner, authentication));
         return "qualityReport";
     }
 
     @GetMapping(params = "org", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     public String orgReport(Model model, @PathVariable("owner") String owner, @RequestParam("repos") List<String> repos,
-            @Validated QualityReportQuery query) {
+            @Validated ReportSearchQuery query) {
         Map<String, MultiValueMap<Issue, PullRequestReport>> reports = new HashMap<>();
 
         for (String repo : repos) {
             MultiValueMap<Issue, PullRequestReport> repositoryReport = new LinkedMultiValueMap<>();
             for (Issue pullRequest : getPullRequests(owner, repo, query)) {
                 PullRequestReport report = getPullRequestReport(owner, repo, pullRequest.getNumber());
-                if (report.getIssueNumbers().isEmpty()) {
-                    repositoryReport.add(DEFAULT_ISSUE, report);
-                } else {
-                    repositoryReport.add(getIssue(owner, repo, report.getIssueNumbers().get(0)), report);
-                }
+                repositoryReport.add(getIssue(owner, repo, report.getRelatedIssueNumbers()), report);
             }
             reports.put(repo, repositoryReport);
         }
@@ -92,17 +80,13 @@ public class QualityReportController extends AbstractRestClientController {
 
     @GetMapping(params = "repo", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     public String repoReport(Model model, @PathVariable("owner") String owner, @RequestParam("repo") String repo,
-            @Validated QualityReportQuery query) {
+            @Validated ReportSearchQuery query) {
         Map<String, MultiValueMap<Issue, PullRequestReport>> reports = new HashMap<>();
 
         MultiValueMap<Issue, PullRequestReport> repositoryReport = new LinkedMultiValueMap<>();
         for (Issue pullRequest : getPullRequests(owner, repo, query)) {
             PullRequestReport report = getPullRequestReport(owner, repo, pullRequest.getNumber());
-            if (report.getIssueNumbers().isEmpty()) {
-                repositoryReport.add(DEFAULT_ISSUE, report);
-            } else {
-                repositoryReport.add(getIssue(owner, repo, report.getIssueNumbers().get(0)), report);
-            }
+            repositoryReport.add(getIssue(owner, repo, report.getRelatedIssueNumbers()), report);
         }
         reports.put(repo, repositoryReport);
 
@@ -115,35 +99,23 @@ public class QualityReportController extends AbstractRestClientController {
     public String singleReoprt(Model model, @PathVariable("owner") String owner, @PathVariable("repo") String repo,
             @PathVariable("number") int number) {
         MultiValueMap<Issue, PullRequestReport> repositoryReport = new LinkedMultiValueMap<>();
-
         PullRequestReport report = getPullRequestReport(owner, repo, number);
-        if (report.getIssueNumbers().isEmpty()) {
-            repositoryReport.add(DEFAULT_ISSUE, report);
-        } else {
-            repositoryReport.add(getIssue(owner, repo, number), report);
-        }
+        repositoryReport.add(getIssue(owner, repo, report.getRelatedIssueNumbers()), report);
 
         model.addAttribute("reports", ImmutableMap.of(repo, repositoryReport));
         model.addAttribute("reportName", String.join("#", repo, String.valueOf(number)));
         return "qualityReportView";
     }
 
-    private List<Issue> getPullRequests(String owner, String repo, QualityReportQuery query) {
+    private List<Issue> getPullRequests(String owner, String repo, ReportSearchQuery query) {
         query.setRepo(String.join("/", owner, repo));
         query.setType("pr");
 
         int page = 0;
         List<Issue> pullRequests = new ArrayList<>();
         IssuesResponse res;
-
         do {
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(baseUrl)
-                    .path("/search/issues")
-                    .queryParam("q", QueryBuilder.from(query).build())
-                    .queryParam("page", page)
-                    .queryParam("per_page", perPage);
-            URI uri = builder.build().toUri();
-            res = restOperations.getForEntity(uri, IssuesResponse.class).getBody();
+            res = api.issues(query, page);
             pullRequests.addAll(res.getItems());
             page++;
         } while (pullRequests.size() < res.getTotalCount());
@@ -152,42 +124,28 @@ public class QualityReportController extends AbstractRestClientController {
     }
 
     private PullRequestReport getPullRequestReport(String owner, String repo, int number) {
-        URI pullUrl = UriComponentsBuilder.fromUriString(baseUrl)
-                .path("/repos/{owner}/{repo}/issues/{number}")
-                .build(owner, repo, number);
-        URI commentUri = UriComponentsBuilder.fromUriString(baseUrl)
-                .path("/repos/{owner}/{repo}/issues/{number}/comments")
-                .queryParam("per_page", perPage)
-                .build(owner, repo, number);
-        URI reviewCommentUri = UriComponentsBuilder.fromUriString(baseUrl)
-                .path("/repos/{owner}/{repo}/pulls/{number}/comments")
-                .queryParam("per_page", perPage)
-                .build(owner, repo, number);
-
-        Issue pull = restOperations.getForEntity(pullUrl, Issue.class).getBody();
+        Issue pull = api.issue(owner, repo, number);
         List<Comment> comments = Stream
-                .concat(Arrays.stream(restOperations.getForEntity(commentUri, Comment[].class).getBody()),
-                        Arrays.stream(restOperations.getForEntity(reviewCommentUri, Comment[].class).getBody()))
+                .concat(Arrays.stream(api.issueComments(owner, repo, number)),
+                        Arrays.stream(api.reviewComments(owner, repo, number)))
                 .sorted(comparing(Comment::getCreatedAt))
                 .collect(toList());
         Map<String, Integer> statusSummary = counter
-                .count(Stream.concat(Arrays.asList(pull.getBody()).stream(), comments.stream().map(c -> c.getBody()))
+                .count(Stream.concat(Stream.of(pull.getBody()), comments.stream().map(c -> c.getBody()))
                         .collect(toList()));
-
-        return new PullRequestReport(pull, statusSummary, referencer.numbers(pull.getTitle()));
+        return new PullRequestReport(pull, statusSummary, extractor.numbers(pull.getTitle()));
     }
 
-    private Issue getIssue(String owner, String repo, int number) {
+    private Issue getIssue(String owner, String repo, List<Integer> numbers) {
         String issueRepo = issueManageRepos.containsKey(repo) ? issueManageRepos.get(repo) : repo;
-        URI issueUrl = UriComponentsBuilder.fromUriString(baseUrl)
-                .path("/repos/{owner}/{repo}/issues/{number}")
-                .build(owner, issueRepo, number);
-        try {
-        	return restOperations.getForEntity(issueUrl, Issue.class).getBody();
-        } catch (RestClientException e) {
-        	log.warn("get issue failed:{}:{}", owner + "/" + repo + "#" + number, e.getMessage());
-        	return DEFAULT_ISSUE;
+        for (Integer number : numbers) {
+            try {
+                return api.issue(owner, issueRepo, number);
+            } catch (RestClientException e) {
+                log.warn("failed to get related issue:{}:{}", owner + "/" + repo + "#" + number, e.getMessage());
+            }
         }
+        return DEFAULT_ISSUE;
     }
 
 }

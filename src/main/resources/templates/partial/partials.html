@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header" th:remove="tag">
 <meta charset="utf-8">
@@ -13,7 +14,7 @@
 <script src="https://unpkg.com/tippy.js@2.5.2/dist/tippy.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.4/dist/loadingoverlay.min.js"></script>
 <script id="common-scripts" type="text/javascript">
-    $(function() {
+    $(() => {
         const loading = () => $.LoadingOverlay("show", {
             background : "rgba(255, 255, 255, 0.5)",
             image : "",
@@ -27,9 +28,7 @@
                 setTimeout(() => loadingHide(), loadingTime);
             }
         });
-        $("a:not([target='_blank'])").on("click", function() {
-            loading();
-        });
+        $("a:not([href='#']):not([target='_blank'])").on("click", () => loading());
         $(".datetimepicker").datetimepicker();
         tippy(".tippy", { placement : "bottom" });
     });
@@ -51,7 +50,7 @@
                     th:with="details=${#oauth2authentication.userAuthentication.details}">
                     <a target="_blank" th:href="${details.get('html_url')}">
                         <img class="avatar avatar-circle tippy" th:src="${details.get('avatar_url')}"
-                            th:title="|Enjoy ${#authentication.name}!|"></img>
+                            th:title="|Enjoy ${#authentication.name}!|">
                     </a>
                 </div>
             </div>
