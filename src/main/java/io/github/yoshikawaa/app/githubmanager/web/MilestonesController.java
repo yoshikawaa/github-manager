@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import io.github.yoshikawaa.app.githubmanager.api.entity.Milestone;
+import io.github.yoshikawaa.app.githubmanager.api.query.MilestoneQuery;
 
 @Controller
 @RequestMapping("/repos/{owner}/{repo}/milestones")
@@ -22,14 +22,14 @@ public class MilestonesController extends AbstractGithubApiController {
 
     @PostMapping
     public String milestonesCreate(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
-            @Validated Milestone milestone) {
+            @Validated MilestoneQuery milestone) {
         api.milestonesCreate(owner, repo, milestone);
         return "redirect:/repos/{owner}/{repo}/milestones";
     }
 
     @PostMapping(path = "/{number}", params = "update")
     public String milestonesUpdate(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
-            @PathVariable("number") int number, @Validated Milestone milestone) {
+            @PathVariable("number") int number, @Validated MilestoneQuery milestone) {
         api.milestonesUpdate(owner, repo, number, milestone);
         return "redirect:/repos/{owner}/{repo}/milestones";
     }

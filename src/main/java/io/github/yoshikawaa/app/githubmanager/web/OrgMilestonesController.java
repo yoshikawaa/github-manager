@@ -22,6 +22,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import io.github.yoshikawaa.app.githubmanager.api.entity.Milestone;
 import io.github.yoshikawaa.app.githubmanager.api.entity.Repository;
+import io.github.yoshikawaa.app.githubmanager.api.query.MilestoneQuery;
 import io.github.yoshikawaa.app.githubmanager.core.web.UrlUtils;
 
 @Controller
@@ -39,7 +40,7 @@ public class OrgMilestonesController extends AbstractGithubApiController {
     @PostMapping
     public String milestonesCreate(@SessionAttribute("milestonesMap") Map<String, Milestone[]> milestonesMap,
             @PathVariable("owner") String owner, @RequestParam("repos") List<String> repos,
-            @Validated Milestone milestone) {
+            @Validated MilestoneQuery milestone) {
         milestonesMap.entrySet()
                 .stream()
                 .filter(e -> repos.contains(e.getKey()) && !Arrays.stream(e.getValue())
@@ -52,7 +53,7 @@ public class OrgMilestonesController extends AbstractGithubApiController {
     @PostMapping(path = "/{title}/**", params = "update")
     public String milestonesUpdate(@SessionAttribute("milestonesMap") Map<String, Milestone[]> milestonesMap,
             @PathVariable("owner") String owner, @RequestParam("repos") List<String> repos,
-            @PathVariable("title") String title, @Validated Milestone milestone) {
+            @PathVariable("title") String title, @Validated MilestoneQuery milestone) {
         // Resolve Title contains "/".
         String realTitle = UrlUtils.pathVariableWithSlash(title);
         milestonesMap.entrySet().stream().filter(e -> repos.contains(e.getKey())).forEach(entry -> {

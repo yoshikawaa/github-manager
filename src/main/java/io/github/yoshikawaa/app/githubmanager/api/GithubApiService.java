@@ -17,6 +17,8 @@ import io.github.yoshikawaa.app.githubmanager.api.entity.Milestone;
 import io.github.yoshikawaa.app.githubmanager.api.entity.Organization;
 import io.github.yoshikawaa.app.githubmanager.api.entity.Repository;
 import io.github.yoshikawaa.app.githubmanager.api.helper.QueryBuilder;
+import io.github.yoshikawaa.app.githubmanager.api.query.LabelQuery;
+import io.github.yoshikawaa.app.githubmanager.api.query.MilestoneQuery;
 import io.github.yoshikawaa.app.githubmanager.api.query.ReportSearchQuery;
 import io.github.yoshikawaa.app.githubmanager.api.query.SearchQuery;
 import io.github.yoshikawaa.app.githubmanager.api.response.IssuesResponse;
@@ -45,19 +47,19 @@ public class GithubApiService {
                 .toUri();
         return restOperations.getForEntity(uri, Organization[].class).getBody();
 	}
-    
+
     public Repository[] repos(String owner, Authentication authentication) {
         return owner.equals(authentication.getName()) ? userRepos(owner) : orgsRepos(owner);
     }
-    
+
     public Repository[] userRepos(String owner) {
-    	return repos("/users/{owner}/repos", owner);
+        return repos("/users/{owner}/repos", owner);
     }
 
     public Repository[] orgsRepos(String owner) {
-    	return repos("/orgs/{owner}/repos", owner);
+        return repos("/orgs/{owner}/repos", owner);
     }
-    
+
     private Repository[] repos(String path, String owner) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path(path)
@@ -65,7 +67,7 @@ public class GithubApiService {
                 .build(owner);
         return restOperations.getForEntity(uri, Repository[].class).getBody();
     }
-    
+
     public Label[] labels(String owner, String repo) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels")
@@ -73,28 +75,28 @@ public class GithubApiService {
                 .build(owner, repo);
         return restOperations.getForEntity(uri, Label[].class).getBody();
     }
-    
-    public void labelsCreate(String owner, String repo, Label label) {
+
+    public void labelsCreate(String owner, String repo, LabelQuery label) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels")
                 .build(owner, repo);
         restOperations.postForEntity(uri, label, Label.class);
     }
-    
-    public void labelsUpdate(String owner, String repo, String name, Label label) {
+
+    public void labelsUpdate(String owner, String repo, String name, LabelQuery label) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels/{name}")
                 .build(owner, repo, name);
         restOperations.patchForObject(uri, label, Label.class);
     }
-    
+
     public void labelsDelete(String owner, String repo, String name) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/labels/{name}")
                 .build(owner, repo, name);
         restOperations.delete(uri);
     }
-    
+
     public Milestone[] milestones(String owner, String repo) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones")
@@ -104,28 +106,28 @@ public class GithubApiService {
                 .build(owner, repo);
         return restOperations.getForEntity(uri, Milestone[].class).getBody();
     }
-    
-    public void milestonesCreate(String owner, String repo, Milestone milestone) {
+
+    public void milestonesCreate(String owner, String repo, MilestoneQuery milestone) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones")
                 .build(owner, repo);
         restOperations.postForEntity(uri, milestone, Milestone.class);
     }
-    
-    public void milestonesUpdate(String owner, String repo, int number, Milestone milestone) {
+
+    public void milestonesUpdate(String owner, String repo, int number, MilestoneQuery milestone) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones/{number}")
                 .build(owner, repo, number);
         restOperations.patchForObject(uri, milestone, Milestone.class);
     }
-    
+
     public void milestonesDelete(String owner, String repo, int number) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones/{number}")
                 .build(owner, repo, number);
         restOperations.delete(uri);
     }
-    
+
     public Page<Issue> issues(SearchQuery query) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/search/issues")
@@ -142,7 +144,7 @@ public class GithubApiService {
         IssuesResponse res = restOperations.getForEntity(uri, IssuesResponse.class).getBody();
         return new Page<Issue>(res.getItems(), query.getPage(), query.getPerPage(), res.getTotalCount());
     }
-    
+
     public IssuesResponse issues(ReportSearchQuery query, int page) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/search/issues")
@@ -152,14 +154,14 @@ public class GithubApiService {
         URI uri = builder.build().toUri();
         return restOperations.getForEntity(uri, IssuesResponse.class).getBody();
     }
-    
+
     public Issue issue(String owner, String repo, int number) {
         URI issueUrl = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/issues/{number}")
                 .build(owner, repo, number);
         return restOperations.getForEntity(issueUrl, Issue.class).getBody();
     }
-    
+
     public Comment[] issueComments(String owner, String repo, int number) {
         URI commentUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/issues/{number}/comments")
@@ -167,13 +169,13 @@ public class GithubApiService {
                 .build(owner, repo, number);
         return restOperations.getForEntity(commentUri, Comment[].class).getBody();
     }
-    
+
     public Comment[] reviewComments(String owner, String repo, int number) {
         URI reviewCommentUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/pulls/{number}/comments")
                 .queryParam("per_page", perPage)
                 .build(owner, repo, number);
-    	return restOperations.getForEntity(reviewCommentUri, Comment[].class).getBody();
+        return restOperations.getForEntity(reviewCommentUri, Comment[].class).getBody();
     }
-    
+
 }

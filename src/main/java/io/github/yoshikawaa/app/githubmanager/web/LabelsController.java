@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import io.github.yoshikawaa.app.githubmanager.api.entity.Label;
+import io.github.yoshikawaa.app.githubmanager.api.query.LabelQuery;
 
 @Controller
 @RequestMapping("/repos/{owner}/{repo}/labels")
@@ -22,14 +22,14 @@ public class LabelsController extends AbstractGithubApiController {
 
     @PostMapping
     public String labelsCreate(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
-            @Validated Label label) {
+            @Validated LabelQuery label) {
         api.labelsCreate(owner, repo, label);
         return "redirect:/repos/{owner}/{repo}/labels";
     }
 
     @PostMapping(path = "/{name}", params = "update")
     public String labelsUpdate(@PathVariable("owner") String owner, @PathVariable("repo") String repo,
-            @PathVariable("name") String name, @Validated Label label) {
+            @PathVariable("name") String name, @Validated LabelQuery label) {
         api.labelsUpdate(owner, repo, name, label);
         return "redirect:/repos/{owner}/{repo}/labels";
     }

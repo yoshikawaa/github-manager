@@ -22,6 +22,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import io.github.yoshikawaa.app.githubmanager.api.entity.Label;
 import io.github.yoshikawaa.app.githubmanager.api.entity.Repository;
+import io.github.yoshikawaa.app.githubmanager.api.query.LabelQuery;
 import io.github.yoshikawaa.app.githubmanager.core.web.UrlUtils;
 
 @Controller
@@ -38,7 +39,7 @@ public class OrgLablesController extends AbstractGithubApiController {
 
     @PostMapping
     public String labelsCreate(@SessionAttribute("labelsMap") Map<String, Label[]> labelsMap,
-            @PathVariable("owner") String owner, @RequestParam("repos") List<String> repos, @Validated Label label) {
+            @PathVariable("owner") String owner, @RequestParam("repos") List<String> repos, @Validated LabelQuery label) {
         labelsMap.entrySet()
                 .stream()
                 .filter(e -> repos.contains(e.getKey())
@@ -51,7 +52,7 @@ public class OrgLablesController extends AbstractGithubApiController {
     @PostMapping(path = "/{name}/**", params = "update")
     public String labelsUpdate(@SessionAttribute("labelsMap") Map<String, Label[]> labelsMap,
             @PathVariable("owner") String owner, @RequestParam("repos") List<String> repos,
-            @PathVariable("name") String name, @Validated Label label) {
+            @PathVariable("name") String name, @Validated LabelQuery label) {
         // Resolve Name contains "/".
         String realName = UrlUtils.pathVariableWithSlash(name);
         labelsMap.entrySet()

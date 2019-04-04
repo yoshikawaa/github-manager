@@ -46,7 +46,7 @@
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid datetimepicker" name="dueOn"
-                            placeholder="dueOn">
+                            placeholder="dueOn" autocomplete="off">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid" name="state" value="open" placeholder="state"
@@ -69,7 +69,7 @@
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid datetimepicker" name="dueOn"
-                            th:value="*{#temporals.format(dueOn, 'yyyy/MM/dd HH:mm')}" placeholder="dueOn">
+                            th:value="*{#temporals.format(dueOn, 'yyyy/MM/dd HH:mm')}" placeholder="dueOn" autocomplete="off">
                     </div>
                     <div class="siimple-table-cell">
                         <select class="siimple-select siimple-select--fluid" name="state">

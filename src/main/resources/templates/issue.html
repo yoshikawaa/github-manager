@@ -23,7 +23,7 @@
             <div class="siimple-h6" th:switch="*{is()}">
                 <th:block th:case="closed">
                     <span class="siimple-tag siimple-tag--red">Closed</span>
-                    <span th:text="closed at *{#temporals.format(closedAt, 'yyyy/MM/dd HH:mm')}|"></span>
+                    <span th:text="|closed at *{#temporals.format(closedAt, 'yyyy/MM/dd HH:mm')}|"></span>
                 </th:block>
                 <th:block th:case="*" class="siimple-h3">
                     <span class="siimple-tag siimple-tag--green">Open</span>
