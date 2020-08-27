@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Organization {
-    private int id;
+    private long id;
     private String login;
     private String description;
     private String url;

@@ -16,8 +16,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Issue {
-    private int id;
-    private int number;
+    private long id;
+    private long number;
     private String title;
     private String body;
     @JsonProperty("html_url")
@@ -37,7 +37,7 @@ public class Issue {
     @JsonProperty("merged_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime mergedAt;
-    private int comments;
+    private long comments;
     
     private User user;
     private List<Label> labels;

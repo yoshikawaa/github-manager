@@ -16,7 +16,7 @@ public class ExtractorService {
     private static final String PREFIX_ISSUE_ALT = "Issues/";
     private static final Pattern NUMBER = Pattern.compile("\\d+");
 
-    public List<Integer> numbers(String text) {
+    public List<Long> numbers(String text) {
         if (text.indexOf(PREFIX_ISSUE) != -1) {
             return Arrays.stream(text.split(PREFIX_ISSUE))
                     .map(t -> obtainNumber(t))
@@ -32,16 +32,16 @@ public class ExtractorService {
         return Collections.emptyList();
     }
 
-    private Integer obtainNumber(String text) {
+    private Long obtainNumber(String text) {
         if (StringUtils.isEmpty(text)) {
             return null;
         }
         for (int i = 0; i < text.length(); i++) {
             if (!isNumber(text.substring(0, i + 1))) {
-                return i != 0 ? Integer.parseInt(text.substring(0, i)) : null;
+                return i != 0 ? Long.parseLong(text.substring(0, i)) : null;
             }
         }
-        return Integer.parseInt(text);
+        return Long.parseLong(text);
     }
 
     private Boolean isNumber(String text) {

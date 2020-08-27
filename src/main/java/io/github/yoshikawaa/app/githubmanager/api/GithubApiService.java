@@ -114,14 +114,14 @@ public class GithubApiService {
         restOperations.postForEntity(uri, milestone, Milestone.class);
     }
 
-    public void milestonesUpdate(String owner, String repo, int number, MilestoneQuery milestone) {
+    public void milestonesUpdate(String owner, String repo, long number, MilestoneQuery milestone) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones/{number}")
                 .build(owner, repo, number);
         restOperations.patchForObject(uri, milestone, Milestone.class);
     }
 
-    public void milestonesDelete(String owner, String repo, int number) {
+    public void milestonesDelete(String owner, String repo, long number) {
         URI uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/milestones/{number}")
                 .build(owner, repo, number);
@@ -155,14 +155,14 @@ public class GithubApiService {
         return restOperations.getForEntity(uri, IssuesResponse.class).getBody();
     }
 
-    public Issue issue(String owner, String repo, int number) {
+    public Issue issue(String owner, String repo, long number) {
         URI issueUrl = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/issues/{number}")
                 .build(owner, repo, number);
         return restOperations.getForEntity(issueUrl, Issue.class).getBody();
     }
 
-    public Comment[] issueComments(String owner, String repo, int number) {
+    public Comment[] issueComments(String owner, String repo, long number) {
         URI commentUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/issues/{number}/comments")
                 .queryParam("per_page", perPage)
@@ -170,7 +170,7 @@ public class GithubApiService {
         return restOperations.getForEntity(commentUri, Comment[].class).getBody();
     }
 
-    public Comment[] reviewComments(String owner, String repo, int number) {
+    public Comment[] reviewComments(String owner, String repo, long number) {
         URI reviewCommentUri = UriComponentsBuilder.fromUriString(baseUrl)
                 .path("/repos/{owner}/{repo}/pulls/{number}/comments")
                 .queryParam("per_page", perPage)

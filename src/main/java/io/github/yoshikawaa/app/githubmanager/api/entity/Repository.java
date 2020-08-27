@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Repository {
-    private int id;
+    private long id;
     private String name;
     private String description;
     @JsonProperty("html_url")

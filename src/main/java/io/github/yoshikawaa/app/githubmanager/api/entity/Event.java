@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Event {
-    private int id;
+    private long id;
     @JsonProperty("node_id")
     private String nodeId;
     private String url;

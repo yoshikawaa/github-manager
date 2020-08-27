@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Assignee {
-    private int id;
+    private long id;
     private String login;
     private String type;
     @JsonProperty("html_url")

@@ -14,5 +14,5 @@ import lombok.Setter;
 public class PullRequestReport {
 	private Issue pull;
 	private Map<String, Integer> statusSummary;
-	private List<Integer> relatedIssueNumbers;
+	private List<Long> relatedIssueNumbers;
 }

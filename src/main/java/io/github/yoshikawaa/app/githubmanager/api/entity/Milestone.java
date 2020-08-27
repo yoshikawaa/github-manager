@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Milestone {
-    private int id;
-    private int number;
+    private long id;
+    private long number;
     private String title;
     private String description;
     @JsonProperty("html_url")
@@ -22,7 +22,7 @@ public class Milestone {
     private LocalDateTime dueOn;
     private String state;
     @JsonProperty("open_issues")
-    private int openIssues;
+    private long openIssues;
     @JsonProperty("closed_issues")
-    private int closedIssues;
+    private long closedIssues;
 }

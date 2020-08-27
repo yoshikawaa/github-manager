@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Comment {
-    private int id;
+    private long id;
     private String body;
     @JsonProperty("html_url")
     private String htmlUrl;

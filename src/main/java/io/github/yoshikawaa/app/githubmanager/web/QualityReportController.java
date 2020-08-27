@@ -123,7 +123,7 @@ public class QualityReportController extends AbstractGithubApiController {
         return pullRequests;
     }
 
-    private PullRequestReport getPullRequestReport(String owner, String repo, int number) {
+    private PullRequestReport getPullRequestReport(String owner, String repo, long number) {
         Issue pull = api.issue(owner, repo, number);
         List<Comment> comments = Stream
                 .concat(Arrays.stream(api.issueComments(owner, repo, number)),
@@ -136,9 +136,9 @@ public class QualityReportController extends AbstractGithubApiController {
         return new PullRequestReport(pull, statusSummary, extractor.numbers(pull.getTitle()));
     }
 
-    private Issue getIssue(String owner, String repo, List<Integer> numbers) {
+    private Issue getIssue(String owner, String repo, List<Long> numbers) {
         String issueRepo = issueManageRepos.containsKey(repo) ? issueManageRepos.get(repo) : repo;
-        for (Integer number : numbers) {
+        for (Long number : numbers) {
             try {
                 return api.issue(owner, issueRepo, number);
             } catch (RestClientException e) {
