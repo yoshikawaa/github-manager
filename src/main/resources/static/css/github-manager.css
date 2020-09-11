@@ -20,6 +20,10 @@ img.avatar-circle {
 	padding-top: 60px;
 }
 
+.siimple-input--fluid {
+	width: 95%;
+}
+
 .siimple-table-cell {
 	white-space: normal !important;
 	overflow: visible !important;

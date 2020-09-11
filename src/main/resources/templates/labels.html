@@ -29,15 +29,19 @@
         <div class="siimple-table siimple-table--border siimple-table--striped siimple-table--hover">
             <div class="siimple-table-header">
                 <div class="siimple-table-row">
-                    <div class="siimple-table-cell siimple-table-cell--4">Name</div>
-                    <div class="siimple-table-cell siimple-table-cell--4">Color</div>
-                    <div class="siimple-table-cell siimple-table-cell--4">Action</div>
+                    <div class="siimple-table-cell siimple-table-cell--3">Name</div>
+                    <div class="siimple-table-cell siimple-table-cell--3">Description</div>
+                    <div class="siimple-table-cell siimple-table-cell--3">Color</div>
+                    <div class="siimple-table-cell siimple-table-cell--3">Action</div>
                 </div>
             </div>
             <div class="siimple-table-body">
                 <form class="siimple-table-row" method="post" th:action>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid" name="name" placeholder="name">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid" name="description" placeholder="description">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid jscolor" name="color" placeholder="color">
@@ -51,6 +55,10 @@
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid" name="name" th:value="*{name}"
                             placeholder="name">
+                    </div>
+                    <div class="siimple-table-cell">
+                        <input class="siimple-input siimple-input--fluid" name="description" th:value="*{description}"
+                            placeholder="description">
                     </div>
                     <div class="siimple-table-cell">
                         <input class="siimple-input siimple-input--fluid jscolor" name="color" th:value="*{color}"
