@@ -7,8 +7,8 @@ import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.thymeleaf.standard.processor.AbstractStandardExpressionAttributeTagProcessor;
 import org.thymeleaf.templatemode.TemplateMode;
 
-import com.vladsch.flexmark.util.options.DataHolder;
-import com.vladsch.flexmark.util.options.MutableDataSet;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 
 public class MarkdownTagProcessor extends AbstractStandardExpressionAttributeTagProcessor {
 

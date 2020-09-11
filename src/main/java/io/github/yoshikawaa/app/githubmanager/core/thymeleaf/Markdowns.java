@@ -2,8 +2,8 @@ package io.github.yoshikawaa.app.githubmanager.core.thymeleaf;
 
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.options.DataHolder;
-import com.vladsch.flexmark.util.options.MutableDataSet;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 
 public class Markdowns {
 

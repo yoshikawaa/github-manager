@@ -12,7 +12,7 @@ import org.thymeleaf.standard.processor.StandardXmlNsTagProcessor;
 import org.thymeleaf.templatemode.TemplateMode;
 
 import com.google.common.collect.ImmutableSet;
-import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.data.DataHolder;
 
 public class MyDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
 

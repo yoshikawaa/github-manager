@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("deprecation")
 @Slf4j
 public class OAuth2Authentications {
 

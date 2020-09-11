@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
@@ -34,13 +33,13 @@ import org.springframework.util.StringUtils;
 import org.thymeleaf.dialect.IDialect;
 
 import com.vladsch.flexmark.parser.ParserEmulationProfile;
-import com.vladsch.flexmark.util.options.MutableDataSet;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 
 import io.github.yoshikawaa.app.githubmanager.core.thymeleaf.MyDialect;
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
-@EnableWebSecurity
+@SuppressWarnings("deprecation")
 @EnableOAuth2Sso
 @Slf4j
 public class Application {
